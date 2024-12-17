@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trustsoft.TextTables", "Trustsoft.TextTables\Trustsoft.TextTables.csproj", "{A36822F1-9F81-4D0A-B4DC-283BE4566BCD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{5FEB2004-DE80-4841-BF11-2A605F486966}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsageSample.ConsoleApp", "..\samples\UsageSample.ConsoleApp\UsageSample.ConsoleApp.csproj", "{C0EEA1C2-BCEA-4C89-8CA7-B281C4BC77CE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A36822F1-9F81-4D0A-B4DC-283BE4566BCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A36822F1-9F81-4D0A-B4DC-283BE4566BCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A36822F1-9F81-4D0A-B4DC-283BE4566BCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A36822F1-9F81-4D0A-B4DC-283BE4566BCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0EEA1C2-BCEA-4C89-8CA7-B281C4BC77CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0EEA1C2-BCEA-4C89-8CA7-B281C4BC77CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0EEA1C2-BCEA-4C89-8CA7-B281C4BC77CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0EEA1C2-BCEA-4C89-8CA7-B281C4BC77CE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C0EEA1C2-BCEA-4C89-8CA7-B281C4BC77CE} = {5FEB2004-DE80-4841-BF11-2A605F486966}
+	EndGlobalSection
+EndGlobal
