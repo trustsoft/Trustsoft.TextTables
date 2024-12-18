@@ -2,9 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <Title>Work with text table with ease.</Title>
+    <Product>Trustsoft TextTable Class Library</Product>
+    <Authors>Trustsoft</Authors>
+    <Description>
+      Extensible text tables for .NET 8.0.
+      Work with text table with ease.
+    </Description>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <BaseOutputPath>..\..\artifacts\</BaseOutputPath>
+    <SignAssembly>False</SignAssembly>
+    <LangVersion>latest</LangVersion>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
 </Project>
