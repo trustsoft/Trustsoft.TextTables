@@ -17,7 +17,7 @@ internal static class Program
         {
             new User("Carter", "John",
                      DateOnly.Parse("23.06.1988")),
-            new User("Caningham", "William",
+            new User("Caningham", "William Robert",
                      DateOnly.Parse("10.09.1985")),
             new User("Snowfields", "Mark",
                      DateOnly.Parse("16.05.1991"))
@@ -41,13 +41,29 @@ internal static class Program
             "Email"
         };
         var table = new TextTable(columns);
-
         foreach (var user in users)
         {
             table.AddRow(user.FirstName, user.LastName, user.Birthday, user.Age, user.Email);
         }
 
         table.Write();
+        
+        List<(string, Alignment)> columns2 = 
+        [
+            ("First name", Alignment.Left),
+            ("Last name", Alignment.Left),
+            ("Birthday", Alignment.Left),
+            ("Age", Alignment.Right),
+            ("Email", Alignment.Right),
+        ];
+        table = new TextTable(columns2);
+        foreach (var user in users)
+        {
+            table.AddRow(user.FirstName, user.LastName, user.Birthday, user.Age, user.Email);
+        }
+
+        table.Write();
+        
         Console.ReadLine();
     }
 }

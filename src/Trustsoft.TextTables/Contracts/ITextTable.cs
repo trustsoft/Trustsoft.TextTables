@@ -9,7 +9,7 @@ namespace Trustsoft.TextTables.Contracts;
 
 public interface ITextTable
 {
-    List<string> Columns { get; }
+    List<TableColumn> Columns { get; }
 
     IList<object?[]> Rows { get; }
     

@@ -11,17 +11,27 @@ using Trustsoft.TextTables.Contracts;
 
 public class TextTable : ITextTable
 {
-    public List<string> Columns { get; }
+    public List<TableColumn> Columns { get; }
 
     public IList<object?[]> Rows { get; } = [];
     
     public TextWriter OutputTo { get; set; } = Console.Out;
-    
-    public TextTable(List<string> columns)
+
+    public TextTable(List<TableColumn> columns)
     {
         this.Columns = columns;
     }
     
+    public TextTable(List<string> columns)
+        : this(columns.Select(name => new TableColumn(name)).ToList())
+    {
+    }
+
+    public TextTable(List<(string name, Alignment alignment)> columns)
+        : this(columns.Select(tuple => new TableColumn(tuple.name, tuple.alignment)).ToList())
+    {
+    }
+
     public void AddRow(params object[] values)
     {
         ArgumentNullException.ThrowIfNull(values);
@@ -46,7 +56,7 @@ public class TextTable : ITextTable
             var result = this.Rows
                              .Select(row => row[columnIndex])
                              .Select(rowValue => rowValue?.ToString() ?? string.Empty)
-                             .Union([this.Columns[columnIndex]])
+                             .Union([this.Columns[columnIndex].Name])
                              .Select(s => s.Length).Max();
 
             yield return result;
@@ -108,6 +118,16 @@ public class TextTable : ITextTable
     
     public void WriteTo(TextWriter output)
     {
+        string GetAlignmentSpecifier(TableColumn column)
+        {
+            return column.Alignment switch
+                   {
+                       Alignment.Left => "-",
+                       Alignment.Right => "",
+                       _ => throw new ArgumentOutOfRangeException()
+                   };
+        }
+
         // print ruler
         this.PrintRuler(output, this.GetTableFullWidth());
         
@@ -123,16 +143,16 @@ public class TextTable : ITextTable
         Console.WriteLine(divider);
 
         var namesFormat = Enumerable.Range(0, this.Columns.Count)
-                                    .Select(i => "| {" + i + "," + "-" + widths[i] + "}")
+                                    .Select(i => "| {" + i + "," + GetAlignmentSpecifier(this.Columns[i]) + widths[i] + "}")
                                     .Aggregate((a, b) => $"{a} {b}") + " |";
         // print column names
-        Console.WriteLine(namesFormat, this.Columns.Select(object (name) => name).ToArray());
+        Console.WriteLine(namesFormat, this.Columns.Select(object (column) => column.Name).ToArray());
         
         Console.WriteLine(divider);
 
         // print table rows
         namesFormat = Enumerable.Range(0, this.Columns.Count)
-                                .Select(i => "| {" + i + "," + "-" + widths[i] + "}")
+                                .Select(i => "| {" + i + "," + GetAlignmentSpecifier(this.Columns[i]) + widths[i] + "}")
                                 .Aggregate((a, b) => $"{a} {b}") + " |";
         
         foreach (var row in this.Rows)
