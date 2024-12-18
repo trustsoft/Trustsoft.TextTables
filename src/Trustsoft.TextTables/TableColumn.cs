@@ -9,11 +9,16 @@ namespace Trustsoft.TextTables;
 
 public class TableColumn
 {
+    public static Alignment DefaultAlignment = Alignment.Left;
     public string Name { get; set; }
     
     public Alignment Alignment { get; set; }
 
-    public TableColumn(string name, Alignment alignment = Alignment.Left)
+    public TableColumn(string name) : this(name, DefaultAlignment)
+    {
+    }
+
+    public TableColumn(string name, Alignment alignment)
     {
         this.Name = name;
         this.Alignment = alignment;
