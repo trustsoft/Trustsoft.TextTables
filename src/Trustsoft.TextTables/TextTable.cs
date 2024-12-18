@@ -16,12 +16,22 @@ public class TextTable : ITextTable
     public IList<object?[]> Rows { get; } = [];
     
     public TextWriter OutputTo { get; set; } = Console.Out;
-    
-    public TextTable(List<string> columns)
+
+    public TextTable(List<TableColumn> columns)
     {
-        this.Columns = columns.Select(name => new TableColumn(name)).ToList();
+        this.Columns = columns;
     }
     
+    public TextTable(List<string> columns)
+        : this(columns.Select(name => new TableColumn(name)).ToList())
+    {
+    }
+
+    public TextTable(List<(string name, Alignment alignment)> columns)
+        : this(columns.Select(tuple => new TableColumn(tuple.name, tuple.alignment)).ToList())
+    {
+    }
+
     public void AddRow(params object[] values)
     {
         ArgumentNullException.ThrowIfNull(values);
