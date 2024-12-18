@@ -41,13 +41,29 @@ internal static class Program
             "Email"
         };
         var table = new TextTable(columns);
-        table.Columns[0].Alignment = Alignment.Right;
         foreach (var user in users)
         {
             table.AddRow(user.FirstName, user.LastName, user.Birthday, user.Age, user.Email);
         }
 
         table.Write();
+        
+        List<(string, Alignment)> columns2 = 
+        [
+            ("First name", Alignment.Left),
+            ("Last name", Alignment.Left),
+            ("Birthday", Alignment.Left),
+            ("Age", Alignment.Right),
+            ("Email", Alignment.Right),
+        ];
+        table = new TextTable(columns2);
+        foreach (var user in users)
+        {
+            table.AddRow(user.FirstName, user.LastName, user.Birthday, user.Age, user.Email);
+        }
+
+        table.Write();
+        
         Console.ReadLine();
     }
 }
