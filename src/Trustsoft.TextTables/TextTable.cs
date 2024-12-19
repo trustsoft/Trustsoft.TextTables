@@ -15,6 +15,8 @@ public class TextTable : ITextTable
 
     public IList<object?[]> Rows { get; } = [];
     
+    public int ContentIndent { get; set; } = 1;
+    
     public TextWriter OutputTo { get; set; } = Console.Out;
 
     public TextTable(List<TableColumn> columns)
@@ -73,8 +75,8 @@ public class TextTable : ITextTable
         // add column lengths
         width += this.GetColumnWidths().Sum();
         
-        // add column content indent
-        width += this.Columns.Count * 2;
+        // add columns content indent left + right
+        width += this.Columns.Count * (this.ContentIndent * 2);
         
         // add column separators
         width += this.Columns.Count - 1;
@@ -129,36 +131,40 @@ public class TextTable : ITextTable
         }
 
         // print ruler
-        this.PrintRuler(output, this.GetTableFullWidth());
+        var tableWidth = this.GetTableFullWidth();
+        this.PrintRuler(output, tableWidth);
         
         // print table header
         var widths = this.GetColumnWidths().ToList();
+        var indent = new string(' ', this.ContentIndent);
 
+        var indentWide = 2 * this.ContentIndent;
+        var contentAreas = widths.Select(w => w + indentWide).ToList();
         var div = Enumerable.Range(0, this.Columns.Count)
-                            .Select(i => "+ {" + i + "," + "-" + widths[i] + "}")
-                            .Aggregate((a, b) => $"{a} {b}") + " +";
-
-        var divider = string.Format(div, widths.Select(object (length) => new string('-', length)).ToArray());
-
-        Console.WriteLine(divider);
+                            .Select(i => "+{" + i + "," + "-" + contentAreas[i] + "}")
+                            .Aggregate((a, b) => $"{a}{b}") + "+";
+        
+        var divider = string.Format(div, contentAreas.Select(object (length) => new string('-', length)).ToArray());
+        
+        output.WriteLine(divider);
 
         var namesFormat = Enumerable.Range(0, this.Columns.Count)
-                                    .Select(i => "| {" + i + "," + GetAlignmentSpecifier(this.Columns[i]) + widths[i] + "}")
-                                    .Aggregate((a, b) => $"{a} {b}") + " |";
+                                    .Select(i => "|" + indent + "{" + i + "," + GetAlignmentSpecifier(this.Columns[i]) + widths[i] + "}")
+                                    .Aggregate((a, b) => $"{a}{indent}{b}") + indent +"|";
         // print column names
-        Console.WriteLine(namesFormat, this.Columns.Select(object (column) => column.Name).ToArray());
+        output.WriteLine(namesFormat, this.Columns.Select(object (column) => column.Name).ToArray());
         
-        Console.WriteLine(divider);
+        output.WriteLine(divider);
 
         // print table rows
         namesFormat = Enumerable.Range(0, this.Columns.Count)
-                                .Select(i => "| {" + i + "," + GetAlignmentSpecifier(this.Columns[i]) + widths[i] + "}")
-                                .Aggregate((a, b) => $"{a} {b}") + " |";
+                                .Select(i => "|" + indent + "{" + i + "," + GetAlignmentSpecifier(this.Columns[i]) + widths[i] + "}")
+                                .Aggregate((a, b) => $"{a}{indent}{b}") + indent +"|";
         
         foreach (var row in this.Rows)
         {
-            Console.WriteLine(namesFormat, row);
-            Console.WriteLine(divider);
+            output.WriteLine(namesFormat, row);
+            output.WriteLine(divider);
         }
     }
 }
