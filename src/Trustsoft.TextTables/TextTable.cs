@@ -11,6 +11,8 @@ using Trustsoft.TextTables.Contracts;
 
 public class TextTable : ITextTable
 {
+    public string Title { get; set; } = string.Empty;
+    
     public List<TableColumn> Columns { get; }
 
     public IList<object?[]> Rows { get; } = [];
@@ -21,6 +23,10 @@ public class TextTable : ITextTable
     
     public bool ShowRuler { get; set; } = false;
     
+    public bool ShowTitle { get; set; } = true;
+
+    private bool ShouldShowTitle => this.ShowTitle && this.Title.Length > 0;
+
     public TextWriter OutputTo { get; set; } = Console.Out;
 
     public TextTable(List<TableColumn> columns)
@@ -141,11 +147,25 @@ public class TextTable : ITextTable
         {
             this.PrintRuler(output, tableWidth);
         }
-        
-        // print table header
-        var widths = this.GetColumnWidths().ToList();
         var tableIndent = new string(' ', this.Indent);
         var contentIndent = new string(' ', this.ContentIndent);
+        this.Title = "User List";
+        
+        // print title
+        if (this.ShouldShowTitle)
+        {
+            var titleArea = tableWidth - 2;
+            var line = $"{tableIndent}+{new string('-', titleArea)}+";
+            output.WriteLine(line);
+            var leftIndent = (titleArea - this.Title.Length) / 2;
+            var leftPart = new string(' ', leftIndent);
+            var rightPart = new string(' ', (titleArea - this.Title.Length) - leftIndent);
+            line = $"{tableIndent}|{leftPart}{this.Title}{rightPart}|";
+            output.WriteLine(line);
+        }
+
+        // print table header
+        var widths = this.GetColumnWidths().ToList();
 
         var indentWide = 2 * this.ContentIndent;
         var contentAreas = widths.Select(w => w + indentWide).ToList();
