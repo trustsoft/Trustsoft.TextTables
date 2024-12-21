@@ -19,6 +19,8 @@ public class TextTable : ITextTable
     
     public int ContentIndent { get; set; } = 1;
     
+    public bool ShowRuler { get; set; } = false;
+    
     public TextWriter OutputTo { get; set; } = Console.Out;
 
     public TextTable(List<TableColumn> columns)
@@ -135,7 +137,10 @@ public class TextTable : ITextTable
 
         // print ruler
         var tableWidth = this.GetTableFullWidth();
-        this.PrintRuler(output, tableWidth);
+        if (this.ShowRuler)
+        {
+            this.PrintRuler(output, tableWidth);
+        }
         
         // print table header
         var widths = this.GetColumnWidths().ToList();
