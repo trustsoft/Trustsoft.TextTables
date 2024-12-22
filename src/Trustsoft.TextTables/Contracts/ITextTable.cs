@@ -15,7 +15,7 @@ public interface ITextTable
     /// <summary>
     ///   The title of the table.
     /// </summary>
-    string Title { get; }
+    string Title { get; set; }
 
     /// <summary>
     ///   The columns of the table.
@@ -28,34 +28,9 @@ public interface ITextTable
     IList<object?[]> Rows { get; }
 
     /// <summary>
-    ///   Describes whether to indent table and how many.
+    ///   Defines table options.
     /// </summary>
-    int Indent { get; set; }
-
-    /// <summary>
-    ///   Describes whether to indent column's content and how many.
-    /// </summary>
-    int ContentIndent { get; set; }
-
-    /// <summary>
-    ///   Describes whether to show table ruler.
-    /// </summary>
-    bool ShowRuler { get; set; }
-
-    /// <summary>
-    ///   Describes whether to show table title.
-    /// </summary>
-    bool ShowTitle { get; set; }
-
-    /// <summary>
-    ///   Describes whether to show table header.
-    /// </summary>
-    bool ShowHeader { get; set; }
-
-    /// <summary>
-    ///   The <see cref="TextWriter" /> to write table data to.
-    /// </summary>
-    TextWriter OutputTo { get; }
+    TableOptions Options { get; set; }
 
     /// <summary>
     ///   Writes table data to output defined by <see cref="P:OutputTo" />.

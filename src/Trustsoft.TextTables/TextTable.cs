@@ -34,37 +34,11 @@ public class TextTable : ITextTable
     public IList<object?[]> Rows { get; } = [];
 
     /// <summary>
-    ///   Describes whether to indent table and how many.
+    ///   Defines the TextTable configuration options.
     /// </summary>
-    public int Indent { get; set; } = 0;
+    public TableOptions Options { get; set; }
 
-    /// <summary>
-    ///   Describes whether to indent column's content and how many.
-    /// </summary>
-    public int ContentIndent { get; set; } = 1;
-
-    /// <summary>
-    ///   Describes whether to show table ruler.
-    /// </summary>
-    public bool ShowRuler { get; set; } = false;
-
-    /// <summary>
-    ///   Describes whether to show table title.
-    /// </summary>
-    public bool ShowTitle { get; set; } = true;
-
-    /// <summary>
-    ///   Describes whether to show table header.
-    /// </summary>
-    public bool ShowHeader { get; set; } = true;
-
-    private bool ShouldShowTitle => this.ShowTitle && this.Title.Length > 0;
-
-    /// <summary>
-    ///   The <see cref="TextWriter" /> to write table data to.
-    ///   Defaults to <see cref="Console.Out" />.
-    /// </summary>
-    public TextWriter OutputTo { get; set; } = Console.Out;
+    private bool ShouldShowTitle => this.Options.ShowTitle && this.Title.Length > 0;
 
     /// <summary>
     ///   Initializes a new instance of the <see cref="TextTable" /> class
@@ -73,6 +47,7 @@ public class TextTable : ITextTable
     /// <param name="columns"> The columns. </param>
     public TextTable(List<TableColumn> columns)
     {
+        this.Options = new TableOptions();
         this.Columns = columns;
     }
 
@@ -83,6 +58,7 @@ public class TextTable : ITextTable
     public TextTable(List<string> columnNames)
             : this(columnNames.Select(name => new TableColumn(name)).ToList())
     {
+        this.Options = new TableOptions();
     }
 
     /// <summary>
@@ -93,6 +69,7 @@ public class TextTable : ITextTable
     public TextTable(List<(string name, Alignment alignment)> tuples)
             : this(tuples.Select(tuple => new TableColumn(tuple.name, tuple.alignment)).ToList())
     {
+        this.Options = new TableOptions();
     }
 
     /// <summary>
@@ -147,7 +124,7 @@ public class TextTable : ITextTable
         width += this.GetColumnWidths().Sum();
         
         // add columns content indent left + right
-        width += this.Columns.Count * (this.ContentIndent * 2);
+        width += this.Columns.Count * (this.Options.ContentIndent * 2);
         
         // add column separators
         width += this.Columns.Count - 1;
@@ -160,14 +137,14 @@ public class TextTable : ITextTable
     /// </summary>
     public void Write()
     {
-        this.WriteTo(this.OutputTo);
+        this.WriteTo(this.Options.OutputTo);
     }
 
     private void PrintRuler(TextWriter output, int fullTableWidth)
     {
         output.WriteLine($"Full width: {fullTableWidth}");
 
-        var tableIndent = new string(' ', this.Indent);
+        var tableIndent = new string(' ', this.Options.Indent);
         var s = tableIndent;
 
         for (var i = 0; i < fullTableWidth; i++)
@@ -214,13 +191,13 @@ public class TextTable : ITextTable
         // print ruler
         var tableWidth = this.GetTableFullWidth();
 
-        if (this.ShowRuler)
+        if (this.Options.ShowRuler)
         {
             this.PrintRuler(output, tableWidth);
         }
 
-        var tableIndent = new string(' ', this.Indent);
-        var contentIndent = new string(' ', this.ContentIndent);
+        var tableIndent = new string(' ', this.Options.Indent);
+        var contentIndent = new string(' ', this.Options.ContentIndent);
         this.Title = "User List";
 
         // print title
@@ -238,7 +215,7 @@ public class TextTable : ITextTable
 
         var widths = this.GetColumnWidths().ToList();
 
-        var indentWide = 2 * this.ContentIndent;
+        var indentWide = 2 * this.Options.ContentIndent;
         var contentAreas = widths.Select(w => w + indentWide).ToList();
         var div = tableIndent;
         div += Enumerable.Range(0, this.Columns.Count)
@@ -248,7 +225,7 @@ public class TextTable : ITextTable
         var divider = string.Format(div, contentAreas.Select(object (length) => new string('-', length)).ToArray());
 
         // print table header
-        if (this.ShowHeader)
+        if (this.Options.ShowHeader)
         {
             output.WriteLine(divider);
             lineFormat = tableIndent;
