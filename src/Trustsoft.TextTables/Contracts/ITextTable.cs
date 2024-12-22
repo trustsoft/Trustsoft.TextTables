@@ -13,6 +13,11 @@ namespace Trustsoft.TextTables.Contracts;
 public interface ITextTable
 {
     /// <summary>
+    ///   The title of the table.
+    /// </summary>
+    string Title { get; }
+
+    /// <summary>
     ///   The columns of the table.
     /// </summary>
     List<TableColumn> Columns { get; }
@@ -21,7 +26,32 @@ public interface ITextTable
     ///   The collection of rows that belong to this table.
     /// </summary>
     IList<object?[]> Rows { get; }
-    
+
+    /// <summary>
+    ///   Describes whether to indent table and how many.
+    /// </summary>
+    int Indent { get; set; }
+
+    /// <summary>
+    ///   Describes whether to indent column's content and how many.
+    /// </summary>
+    int ContentIndent { get; set; }
+
+    /// <summary>
+    ///   Describes whether to show table ruler.
+    /// </summary>
+    bool ShowRuler { get; set; }
+
+    /// <summary>
+    ///   Describes whether to show table title.
+    /// </summary>
+    bool ShowTitle { get; set; }
+
+    /// <summary>
+    ///   Describes whether to show table header.
+    /// </summary>
+    bool ShowHeader { get; set; }
+
     /// <summary>
     ///   The <see cref="TextWriter" /> to write table data to.
     /// </summary>
@@ -31,7 +61,7 @@ public interface ITextTable
     ///   Writes table data to output defined by <see cref="P:OutputTo" />.
     /// </summary>
     void Write();
-    
+
     /// <summary>
     ///   Writes table data to specified <paramref name="output" />.
     /// </summary>
