@@ -7,15 +7,34 @@
 
 namespace Trustsoft.TextTables.Contracts;
 
+/// <summary>
+///   Represents text table of in-memory data.
+/// </summary>
 public interface ITextTable
 {
+    /// <summary>
+    ///   The columns of the table.
+    /// </summary>
     List<TableColumn> Columns { get; }
 
+    /// <summary>
+    ///   The collection of rows that belong to this table.
+    /// </summary>
     IList<object?[]> Rows { get; }
     
+    /// <summary>
+    ///   The <see cref="TextWriter" /> to write table data to.
+    /// </summary>
     TextWriter OutputTo { get; }
 
+    /// <summary>
+    ///   Writes table data to output defined by <see cref="P:OutputTo" />.
+    /// </summary>
     void Write();
     
+    /// <summary>
+    ///   Writes table data to specified <paramref name="output" />.
+    /// </summary>
+    /// <param name="output"> The output to print out table data. </param>
     void WriteTo(TextWriter output);
 }

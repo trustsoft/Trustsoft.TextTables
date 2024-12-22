@@ -7,8 +7,18 @@
 
 namespace Trustsoft.TextTables;
 
+/// <summary>
+///   Specifies alignment of table content.
+/// </summary>
 public enum Alignment
 {
+    /// <summary>
+    ///   Content is aligned on the left.
+    /// </summary>
     Left = 0,
+
+    /// <summary>
+    ///   Content is aligned on the right.
+    /// </summary>
     Right = 1,
 }
