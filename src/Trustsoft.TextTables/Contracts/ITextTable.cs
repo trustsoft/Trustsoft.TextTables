@@ -25,7 +25,14 @@ public interface ITextTable
     /// <summary>
     ///   The collection of rows that belong to this table.
     /// </summary>
+    /// <value> The rows data. </value>
     IList<object?[]> Rows { get; }
+    
+    /// <summary>
+    ///   The collection of footer data that belong to this table.
+    /// </summary>
+    /// <value> The footer data. </value>
+    IList<object?> Footer { get; }
 
     /// <summary>
     ///   Defines table options.
