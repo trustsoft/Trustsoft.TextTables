@@ -10,10 +10,9 @@ namespace Trustsoft.TextTables;
 using Trustsoft.TextTables.Contracts;
 
 /// <summary>
-///   Represents text table of in-memory data.
-///   Implements the <see cref="ITextTable" />.
+///   Represents text table of in-memory data.   
 /// </summary>
-/// <seealso cref="ITextTable" />
+/// <remarks> Implements the <see cref="ITextTable" />. </remarks>
 public class TextTable : ITextTable
 {
     /// <summary>
@@ -22,21 +21,18 @@ public class TextTable : ITextTable
     public string Title { get; set; } = string.Empty;
 
     /// <summary>
-    ///   Determines the columns of the table.
+    ///   Defines the columns of the table.
     /// </summary>
-    /// <value> The columns. </value>
     public List<TableColumn> Columns { get; }
 
     /// <summary>
     ///   Gets the collection of rows that belong to this table.
     /// </summary>
-    /// <value> The rows. </value>
     public IList<object?[]> Rows { get; } = [];
     
     /// <summary>
     ///   Gets the collection of footer data that belong to this table.
     /// </summary>
-    /// <value> The footer data. </value>
     public IList<object?> Footer { get; } = [];
 
     /// <summary>
@@ -52,7 +48,7 @@ public class TextTable : ITextTable
     ///   Initializes a new instance of the <see cref="TextTable" /> class
     ///   with the specified <paramref name="columns" />.
     /// </summary>
-    /// <param name="columns"> The columns. </param>
+    /// <param name="columns"> The table columns. </param>
     public TextTable(List<TableColumn> columns)
     {
         this.Options = new TableOptions();
@@ -83,8 +79,8 @@ public class TextTable : ITextTable
     /// <summary>
     ///   Adds the row with specified <paramref name="values" /> as columns data.
     /// </summary>
-    /// <param name="values"> The values. </param>
-    /// <exception cref="ArgumentNullException"> If <paramref name="values" /> is null. </exception>
+    /// <param name="values"> The columns data. </param>
+    /// <exception cref="ArgumentNullException"> If <paramref name="values" /> is <see langword="null"/>. </exception>
     /// <exception cref="Exception"> Column list is empty, set the columns first. </exception>
     /// <exception cref="Exception">
     ///   The number columns in the row does not match the values set width.
@@ -110,8 +106,8 @@ public class TextTable : ITextTable
     /// <summary>
     ///   Adds the footer with specified <paramref name="values" /> as data parts.
     /// </summary>
-    /// <param name="values"> The values. </param>
-    /// <exception cref="ArgumentNullException"> If <paramref name="values" /> is null. </exception>
+    /// <param name="values"> The footer data parts. </param>
+    /// <exception cref="ArgumentNullException"> If <paramref name="values" /> is <see langword="null"/>. </exception>
     public void AddFooter(params object[] values)
     {
         ArgumentNullException.ThrowIfNull(values, nameof(values));
