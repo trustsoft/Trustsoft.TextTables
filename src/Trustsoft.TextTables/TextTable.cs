@@ -32,6 +32,12 @@ public class TextTable : ITextTable
     /// </summary>
     /// <value> The rows. </value>
     public IList<object?[]> Rows { get; } = [];
+    
+    /// <summary>
+    ///   Gets the collection of footer data that belong to this table.
+    /// </summary>
+    /// <value> The footer data. </value>
+    public IList<object?> Footer { get; } = [];
 
     /// <summary>
     ///   Defines the TextTable configuration options.
@@ -39,6 +45,8 @@ public class TextTable : ITextTable
     public TableOptions Options { get; set; }
 
     private bool ShouldShowTitle => this.Options.ShowTitle && this.Title.Length > 0;
+    
+    private bool ShouldShowFooter => this.Options.ShowFooter && this.Footer.Count > 0;
 
     /// <summary>
     ///   Initializes a new instance of the <see cref="TextTable" /> class
@@ -99,6 +107,18 @@ public class TextTable : ITextTable
         this.Rows.Add(values);
     }
 
+    /// <summary>
+    ///   Adds the footer with specified <paramref name="values" /> as data parts.
+    /// </summary>
+    /// <param name="values"> The values. </param>
+    /// <exception cref="ArgumentNullException"> If <paramref name="values" /> is null. </exception>
+    public void AddFooter(params object[] values)
+    {
+        ArgumentNullException.ThrowIfNull(values, nameof(values));
+        
+        values.ToList().ForEach(this.Footer.Add);
+    }
+
     private IEnumerable<int> GetColumnWidths()
     {
         for (var columnIndex = 0; columnIndex < this.Columns.Count; columnIndex++)
@@ -111,6 +131,37 @@ public class TextTable : ITextTable
 
             yield return result;
         }
+    }
+
+    private IEnumerable<int> GetFooterWidths()
+    {
+        return this.GetFooterWidths(this.Footer);
+    }
+
+    private IEnumerable<int> GetFooterWidths(IEnumerable<object?> parts)
+    {
+        return parts.Select(part => part?.ToString())
+                    .Select(s => s?.Length ?? 0)
+                    .ToList();
+    }
+    
+    private int GetFooterWidth()
+    {
+        int width = 0;
+        
+        // add borders
+        width += 2;
+        
+        // add column lengths
+        width += this.GetFooterWidths().Sum();
+        
+        // add columns content indent left + right
+        width += this.Footer.Count * (this.Options.ContentIndent * 2);
+        
+        // add column separators
+        width += this.Footer.Count - 1;
+        
+        return width;
     }
 
     private int GetTableFullWidth()
@@ -188,8 +239,8 @@ public class TextTable : ITextTable
         }
 
         string lineFormat;
-        // print ruler
         var tableWidth = this.GetTableFullWidth();
+        // print ruler
 
         if (this.Options.ShowRuler)
         {
@@ -250,6 +301,28 @@ public class TextTable : ITextTable
         {
             output.WriteLine(lineFormat, row);
             output.WriteLine(divider);
+        }
+        
+        // print footer
+        if (this.ShouldShowFooter)
+        {
+            var footerParts = this.Footer.Select(part => part?.ToString()).ToList();
+            var footerWidths = footerParts.Select(s => s?.Length ?? 0)
+                                          .ToList();
+            
+            var footerDesiredWidth = this.GetFooterWidth() - footerParts.First()!.Length;
+            var footerFirstPartDesiredWidth = tableWidth - footerDesiredWidth;
+            footerWidths[0] = footerFirstPartDesiredWidth;
+            lineFormat = tableIndent;
+            var indices = Enumerable.Range(0, footerParts.Count);
+            lineFormat += indices
+                          .Select(i => "|" + contentIndent + "{" + i + "," + (i == 0 ? "-":"") + footerWidths[i] + "}")
+                          .Aggregate((a, b) => $"{a}{contentIndent}{b}") + contentIndent + "|";
+        
+            output.WriteLine(lineFormat, this.Footer.ToArray());
+            var footerArea = tableWidth - 2;
+            lineFormat = $"{tableIndent}+{new string('-', footerArea)}+";
+            output.WriteLine(lineFormat);
         }
     }
 }

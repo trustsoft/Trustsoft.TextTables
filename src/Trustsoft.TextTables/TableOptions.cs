@@ -36,6 +36,11 @@ public class TableOptions
     ///   Describes whether to show table header.
     /// </summary>
     public bool ShowHeader { get; set; } = true;
+    
+    /// <summary>
+    ///   Describes whether to show table footer.
+    /// </summary>
+    public bool ShowFooter { get; set; } = true;
 
     /// <summary>
     ///   The <see cref="TextWriter" /> to write table data to.

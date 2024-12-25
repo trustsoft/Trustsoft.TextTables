@@ -45,7 +45,7 @@ internal static class Program
         {
             table.AddRow(user.FirstName, user.LastName, user.Birthday, user.Age, user.Email);
         }
-
+        table.AddFooter("Test footer content part 1", "part 2");
         table.Write();
         
         List<(string, Alignment)> columns2 = 
@@ -61,6 +61,9 @@ internal static class Program
         {
             table.AddRow(user.FirstName, user.LastName, user.Birthday, user.Age, user.Email);
         }
+        
+        table.AddFooter("Test footer content part 1", "part 2", "part 3");
+        //table.AddFooter("Test footer content part 1", "part 2");
 
         table.Write();
         
