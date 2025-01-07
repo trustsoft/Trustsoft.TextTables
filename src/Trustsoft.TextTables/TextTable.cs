@@ -97,8 +97,8 @@ public class TextTable : ITextTable
 
         if (this.Columns.Count != values.Length)
         {
-            throw new Exception(
-                    $"The number columns in the row ({this.Columns.Count}) does not match the values 'width' ({values.Length})");
+            throw new Exception($"The number columns in the row ({this.Columns.Count}) " +
+                                $"does not match the values 'width' ({values.Length})");
         }
 
         this.Rows.Add(values);
@@ -190,8 +190,6 @@ public class TextTable : ITextTable
 
     private void PrintRuler(TextWriter output, int fullTableWidth)
     {
-        output.WriteLine($"Full width: {fullTableWidth}");
-
         var tableIndent = new string(' ', this.Options.Indent);
         var s = tableIndent;
 
@@ -200,10 +198,7 @@ public class TextTable : ITextTable
             var x = i + 1;
             var y = x % 10;
 
-            if (y == 0)
-                s += $"{x / 10}";
-            else
-                s += $" ";
+            s += y == 0 ? $"{x / 10}" : " ";
         }
 
         output.WriteLine(s);
@@ -235,10 +230,9 @@ public class TextTable : ITextTable
             };
         }
 
-        string lineFormat;
         var tableWidth = this.GetTableFullWidth();
+        
         // print ruler
-
         if (this.Options.ShowRuler)
         {
             this.PrintRuler(output, tableWidth);
@@ -246,8 +240,8 @@ public class TextTable : ITextTable
 
         var tableIndent = new string(' ', this.Options.Indent);
         var contentIndent = new string(' ', this.Options.ContentIndent);
-        this.Title = "User List";
 
+        string lineFormat;
         // print title
         if (this.ShouldShowTitle)
         {
