@@ -1,0 +1,41 @@
+<!--
+// ========================================================================================================
+//  Description: Common MSBuild configuration for solution
+//  Author: msukhanov (sukhanov.maxim@gmail.com)
+//  Links:
+//    https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild
+//    https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties
+// ========================================================================================================
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <!-- Common project properties -->
+    <PropertyGroup>
+        <Authors>m.sukhanov</Authors>
+        <Owners>M. Sukhanov</Owners>
+        <Company>Trustsoft Ltd.</Company>
+        <DefaultLanguage>en-US</DefaultLanguage>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <SignAssembly>False</SignAssembly>
+        <Copyright>Copyright © $([System.DateTime]::Now.Year) $(Owners). All rights reserved.</Copyright>
+    </PropertyGroup>
+
+    <!-- Project Kind Detection -->
+    <PropertyGroup>
+        <IsTestProject>$(MSBuildProjectName.Contains('Test'))</IsTestProject>
+        <IsDemoProject>$(MSBuildProjectName.Contains('Demo'))</IsDemoProject>
+        <IsSampleProject>$(MSBuildProjectName.Contains('Sample'))</IsSampleProject>
+        <IsSourceProject>True</IsSourceProject>
+        <IsSourceProject Condition="$(IsTestProject)">False</IsSourceProject>
+        <IsSourceProject Condition="$(IsDemoProject)">False</IsSourceProject>
+        <IsSourceProject Condition="$(IsSampleProject)">False</IsSourceProject>
+        <IsPackable>False</IsPackable>
+        <IsPackable Condition="$(IsSourceProject)">True</IsPackable>
+    </PropertyGroup>
+
+    <!-- XML documentation generation -->
+    <PropertyGroup>
+        <GenerateDocumentationFile>$(IsPackable)</GenerateDocumentationFile>
+    </PropertyGroup>
+
+</Project>

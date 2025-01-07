@@ -1,0 +1,67 @@
+<!--
+// ========================================================================================================
+//  Description: Common MSBuild configuration for source projects ('src' folder)
+//  Author: msukhanov (sukhanov.maxim@gmail.com)
+//  Links:
+//    https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild
+//    https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties
+// ========================================================================================================
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <!-- Import parent Directory.build.props -->
+    <Import Project="../Directory.Build.props" />
+
+    <!-- Common project properties -->
+    <PropertyGroup>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+        <VersionPrefix>1.0.0</VersionPrefix>
+        <VersionSuffix>rc1</VersionSuffix>
+    </PropertyGroup>
+
+    <!-- NuGet Package -->
+    <PropertyGroup Condition="$(Configuration)=='Release'">                                                          
+                           
+        <Title>Work with text tables with ease.</Title>
+        <Description>
+            Work with text tables with ease.
+            Supports .NET 6.0-9.0.
+        </Description>
+        <GeneratePackageOnBuild>$(IsPackable)</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <PackageOutputPath>..\..\packages\</PackageOutputPath>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>logo.png</PackageIcon>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/trustsoft/Trustsoft.TextTables.git</RepositoryUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageTags>text;table;console;texttable;consoletable</PackageTags>
+        <PackageDescription>
+            <![CDATA[
+Work with Text Tables with ease.
+Supports .NET 6.0-9.0.
+            ]]>
+        </PackageDescription>
+        <PackageReleaseNotes>
+            ChangeLog
+            ---------
+            1.0.0-rc1 First public Nuget package version.
+        </PackageReleaseNotes>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\logo.png" Pack="True" PackagePath="\" />
+        <None Include="..\..\README.md" Pack="True" PackagePath="\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+    </ItemGroup>
+
+</Project>
