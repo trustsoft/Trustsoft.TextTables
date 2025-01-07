@@ -17,7 +17,7 @@ internal static class Program
         {
             new User("Carter", "John",
                      DateOnly.Parse("23.06.1988")),
-            new User("Caningham", "William Robert",
+            new User("Cunningham", "William Robert",
                      DateOnly.Parse("10.09.1985")),
             new User("Snowfields", "Mark",
                      DateOnly.Parse("16.05.1991"))
