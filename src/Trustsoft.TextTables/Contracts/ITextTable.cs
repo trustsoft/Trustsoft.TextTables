@@ -35,7 +35,7 @@ public interface ITextTable
     IList<object?> Footer { get; }
 
     /// <summary>
-    ///   Defines table options.
+    ///   Defines table configuration options.
     /// </summary>
     TableOptions Options { get; set; }
 

@@ -8,7 +8,7 @@
 namespace Trustsoft.TextTables;
 
 /// <summary>
-///   Specifies content alignment of <see cref="TableColumn">TextTable column</see>.
+///   Specifies content alignment of <see cref="TextTable"/> <see cref="TableColumn">column</see>.
 /// </summary>
 public enum Alignment
 {

@@ -10,7 +10,7 @@ namespace Trustsoft.TextTables;
 using Trustsoft.TextTables.Contracts;
 
 /// <summary>
-///   Represents text table of in-memory data.   
+///   Represents text table of in-memory data.
 /// </summary>
 /// <remarks> Implements the <see cref="ITextTable" />. </remarks>
 public class TextTable : ITextTable
@@ -36,7 +36,7 @@ public class TextTable : ITextTable
     public IList<object?> Footer { get; } = [];
 
     /// <summary>
-    ///   Defines the TextTable configuration options.
+    ///   Defines this table configuration options.
     /// </summary>
     public TableOptions Options { get; set; }
 
@@ -56,7 +56,8 @@ public class TextTable : ITextTable
     }
 
     /// <summary>
-    ///   Initializes a new instance of the <see cref="TextTable" /> class with the specified column names.
+    ///   Initializes a new instance of the <see cref="TextTable" /> class
+    ///   with columns of specified <paramref name="columnNames">column names</paramref>.
     /// </summary>
     /// <param name="columnNames"> The column names. </param>
     public TextTable(List<string> columnNames)
@@ -180,7 +181,7 @@ public class TextTable : ITextTable
     }
 
     /// <summary>
-    ///   Writes table data to output defined by <see cref="P:OutputTo" />.
+    ///   Writes this table data to output defined by <see cref="P:OutputTo" />.
     /// </summary>
     public void Write()
     {
@@ -219,7 +220,7 @@ public class TextTable : ITextTable
     }
 
     /// <summary>
-    ///   Writes table data to specified <paramref name="output" />.
+    ///   Writes this table data to specified <paramref name="output" />.
     /// </summary>
     /// <param name="output"> The output to print out table data. </param>
     public void WriteTo(TextWriter output)

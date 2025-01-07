@@ -12,6 +12,10 @@ namespace Trustsoft.TextTables;
 /// </summary>
 public class TableColumn
 {
+    /// <summary>
+    ///   Defines default content alignment.
+    /// </summary>
+    /// <remarks> Defaults to <see cref="Alignment"/>. </remarks>
     public static Alignment DefaultAlignment = Alignment.Left;
 
     /// <summary>
