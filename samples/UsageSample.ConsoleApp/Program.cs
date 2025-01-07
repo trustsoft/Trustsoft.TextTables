@@ -28,24 +28,26 @@ internal static class Program
 
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
-        
         var users = CreateUsers();
         
-        var columns = new List<string>
-        {
+        List<string> columns =
+        [
             "First name",
             "Last name",
             "Birthday",
             "Age",
             "Email"
-        };
+        ];
+
+        Console.WriteLine();
+        Console.WriteLine("Text Table sample #1");
         var table = new TextTable(columns);
         foreach (var user in users)
         {
             table.AddRow(user.FirstName, user.LastName, user.Birthday, user.Age, user.Email);
         }
         table.AddFooter("Test footer content part 1", "part 2");
+        table.Title = "User List";
         table.Write();
         
         List<(string, Alignment)> columns2 = 
@@ -56,14 +58,17 @@ internal static class Program
             ("Age", Alignment.Right),
             ("Email", Alignment.Right),
         ];
+
+        Console.WriteLine();
+        Console.WriteLine("Text Table sample #2");
         table = new TextTable(columns2);
+        table.Title = "User List";
         foreach (var user in users)
         {
             table.AddRow(user.FirstName, user.LastName, user.Birthday, user.Age, user.Email);
         }
         
         table.AddFooter("Test footer content part 1", "part 2", "part 3");
-        //table.AddFooter("Test footer content part 1", "part 2");
 
         table.Write();
         
