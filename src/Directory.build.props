@@ -23,9 +23,9 @@
     <!-- NuGet Package -->
     <PropertyGroup Condition="$(Configuration)=='Release'">                                                          
                            
-        <Title>Work with text table with ease.</Title>
+        <Title>Work with text tables with ease.</Title>
         <Description>
-            Extensible text tables library. 
+            Work with text tables with ease.
             Supports .NET 6.0-9.0.
         </Description>
         <GeneratePackageOnBuild>$(IsPackable)</GeneratePackageOnBuild>
@@ -44,7 +44,7 @@
         <PackageTags>text;table;console;texttable;consoletable</PackageTags>
         <PackageDescription>
             <![CDATA[
-Extensible text tables library.
+Work with Text Tables with ease.
 Supports .NET 6.0-9.0.
             ]]>
         </PackageDescription>
