@@ -183,7 +183,8 @@ public class TextTable : ITextTable
     /// <summary>
     ///   Writes this table data to output defined by <see cref="P:OutputTo" />.
     /// </summary>
-    public void Write()
+    /// <param name="layout"> The output layout. </param>
+    public void Write(TableLayout layout = TableLayout.Default)
     {
         this.WriteTo(this.Options.OutputTo);
     }
@@ -218,7 +219,8 @@ public class TextTable : ITextTable
     ///   Writes this table data to specified <paramref name="output" />.
     /// </summary>
     /// <param name="output"> The output to print out table data. </param>
-    public void WriteTo(TextWriter output)
+    /// <param name="layout"> The output layout. </param>
+    public void WriteTo(TextWriter output, TableLayout layout = TableLayout.Default)
     {
         string GetAlignmentSpecifier(TableColumn column)
         {
