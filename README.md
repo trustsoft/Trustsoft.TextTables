@@ -16,6 +16,7 @@ Work with text tables with ease.
 
 
 #### Features:
+- Table output layouts;
 - Table indentation;
 - Table title;
 - Table footer;
