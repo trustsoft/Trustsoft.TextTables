@@ -128,7 +128,6 @@ public class TextTable : ITextTable
     /// <param name="layout"> The output layout. </param>
     public void WriteTo(TextWriter output, TableLayout layout = TableLayout.Default)
     {
-        var printer = new TextTablePrinter();
-        printer.PrintTo(this, layout, output);
+        TextTablePrinter.PrintTo(output, this, layout);
     }
 }

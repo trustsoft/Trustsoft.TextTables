@@ -9,7 +9,7 @@ namespace Trustsoft.TextTables;
 
 using Trustsoft.TextTables.Contracts;
 
-internal class TextTablePrinter
+internal static class TextTablePrinter
 {
     /// <summary>
     ///   Returns a new string that center aligns the characters in a
@@ -35,8 +35,8 @@ internal class TextTablePrinter
         return $"{ctx.Indent}+{new string('-', width)}+";
     }
 
-    private string BuildLineFormat(PrintContext ctx, char left, char right,
-                                   char columnDivider, char indentChar)
+    private static string BuildLineFormat(PrintContext ctx, char left, char right,
+                                          char columnDivider, char indentChar)
     {
         string Align(TableColumn column, int i, int wide)
         {
@@ -51,13 +51,13 @@ internal class TextTablePrinter
         return $"{indent}{left}{contentIndent}{lineFormat}{contentIndent}{right}";
     }
 
-    private int GetTableWidth(ITextTable table)
+    private static int GetTableWidth(ITextTable table)
     {
         // add borders
         int width = 2;
         
         // add column lengths
-        width += this.GetColumnWidths(table).Sum();
+        width += GetColumnWidths(table).Sum();
         
         // add columns content indent left + right
         width += table.Columns.Count * table.Options.ContentIndent * 2;
@@ -67,8 +67,8 @@ internal class TextTablePrinter
         
         return width;
     }
-    
-    private IEnumerable<int> GetColumnWidths(ITextTable table)
+
+    private static IEnumerable<int> GetColumnWidths(ITextTable table)
     {
         for (var index = 0; index < table.Columns.Count; index++)
         {
@@ -82,20 +82,20 @@ internal class TextTablePrinter
         }
     }
 
-    private IEnumerable<int> GetFooterPartsWidths(ITextTable table)
+    private static IEnumerable<int> GetFooterPartsWidths(ITextTable table)
     {
         return table.Footer.Select(part => part?.ToString())
                     .Select(s => s?.Length ?? 0)
                     .ToList();
     }
 
-    private int GetFooterWidth(ITextTable table)
+    private static int GetFooterWidth(ITextTable table)
     {
         // left and right borders 
         int width = 2;
 
         // add footer parts lengths
-        width += this.GetFooterPartsWidths(table).Sum();
+        width += GetFooterPartsWidths(table).Sum();
 
         // add parts content indent left + right
         width += table.Footer.Count * (table.Options.ContentIndent * 2);
@@ -106,7 +106,7 @@ internal class TextTablePrinter
         return width;
     }
 
-    private void PrintRuler(PrintContext ctx)
+    private static void PrintRuler(PrintContext ctx)
     {
         var s1 = ctx.Indent;
         var s2 = ctx.Indent;
@@ -124,10 +124,9 @@ internal class TextTablePrinter
         ctx.OutputTo.WriteLine(s2);
     }
 
-    private void PrintTitle(PrintContext ctx)
+    private static void PrintTitle(PrintContext ctx)
     {
-        var tableWidth = ctx.TableWidth;
-        var titleArea = tableWidth - 2;
+        var titleArea = ctx.TableWidth - 2;
 
         if (ctx.ShouldShowTopBorder)
         {
@@ -135,35 +134,31 @@ internal class TextTablePrinter
             ctx.OutputTo.WriteLine(divider);
         }
 
-        //var leftIndent = (titleArea - ctx.Table.Title.Length) / 2;
-        //var leftPart = new string(' ', leftIndent);
-        //var rightPart = new string(' ', (titleArea - ctx.Table.Title.Length) - leftIndent);
-        //var lineFormat = $"{ctx.Indent}|{leftPart}{ctx.Table.Title}{rightPart}|";
         var lineFormat = $"{ctx.Indent}|{PadCenter(ctx.Table.Title, titleArea)}|";
         ctx.OutputTo.WriteLine(lineFormat);
     }
 
-    private void PrintHeader(PrintContext ctx)
+    private static void PrintHeader(PrintContext ctx)
     {
         if (ctx.ShouldShowTopBorder || ctx.ShouldShowTitle)
         {
-            var div = this.BuildLineFormat(ctx, '+', '+', '+', '-');
+            var div = BuildLineFormat(ctx, '+', '+', '+', '-');
             var objects = ctx.ColumnLengths.Select(object (number) => new string('-', number)).ToArray();
             ctx.OutputTo.WriteLine(div, objects);
         }
 
-        var fmt = this.BuildLineFormat(ctx, '|', '|', '|', ' ');
+        var fmt = BuildLineFormat(ctx, '|', '|', '|', ' ');
         var columnNames = ctx.Table.Columns.Select(object (column) => column.Name);
         ctx.OutputTo.WriteLine(fmt, columnNames.ToArray());
     }
 
-    private void PrintRows(PrintContext ctx)
+    private static void PrintRows(PrintContext ctx)
     {
-        var div = this.BuildLineFormat(ctx, '+', '+', '+', '-');
+        var div = BuildLineFormat(ctx, '+', '+', '+', '-');
         var objects = ctx.ColumnLengths.Select(object (number) => new string('-', number)).ToArray();
         var divider = string.Format(div, objects);
 
-        var fmt = this.BuildLineFormat(ctx, '|', '|', '|', ' ');
+        var fmt = BuildLineFormat(ctx, '|', '|', '|', ' ');
         if (ctx.ShouldShowTopBorder || ctx.ShouldShowTitle || ctx.ShouldShowHeader)
         {
             ctx.OutputTo.WriteLine(divider);
@@ -194,13 +189,13 @@ internal class TextTablePrinter
         }
     }
 
-    private void PrintFooter(PrintContext ctx)
+    private static void PrintFooter(PrintContext ctx)
     {
         var footerParts = ctx.Table.Footer.Select(part => part?.ToString()).ToList();
         var footerWidths = footerParts.Select(s => s?.Length ?? 0)
                                       .ToList();
 
-        var footerDesiredWidth = this.GetFooterWidth(ctx.Table) - footerParts.First()!.Length;
+        var footerDesiredWidth = GetFooterWidth(ctx.Table) - footerParts.First()!.Length;
         var footerFirstPartDesiredWidth = ctx.TableWidth - footerDesiredWidth;
         footerWidths[0] = footerFirstPartDesiredWidth;
         var lineFormat = ctx.Indent;
@@ -219,42 +214,42 @@ internal class TextTablePrinter
         }
     }
 
-    private PrintContext CreateContext(ITextTable table, TableLayout layout, TextWriter output)
+    private static PrintContext CreateContext(ITextTable table, TableLayout layout, TextWriter output)
     {
-        var tableWidth = this.GetTableWidth(table);
-        var columnLengths = this.GetColumnWidths(table).ToList();
+        var tableWidth = GetTableWidth(table);
+        var columnLengths = GetColumnWidths(table).ToList();
         return PrintContext.Create(table, layout, output, columnLengths, tableWidth);
     }
 
-    public void PrintTo(ITextTable table, TableLayout layout, TextWriter output)
+    public static void PrintTo(TextWriter output, ITextTable table, TableLayout layout)
     {
         var ctx = CreateContext(table, layout, output);
 
         // print ruler
         if (table.Options.ShowRuler)
         {
-            this.PrintRuler(ctx);
+            PrintRuler(ctx);
         }
         
         // print title
         if (ctx.ShouldShowTitle)
         {
-            this.PrintTitle(ctx);
+            PrintTitle(ctx);
         }
         
         // print header
         if (ctx.ShouldShowHeader)
         {
-            this.PrintHeader(ctx);
+            PrintHeader(ctx);
         }
 
         // print rows
-        this.PrintRows(ctx);
+        PrintRows(ctx);
 
         // print footer
         if (ctx.ShouldShowFooter)
         {
-            this.PrintFooter(ctx);
+            PrintFooter(ctx);
         }
     }
 }
