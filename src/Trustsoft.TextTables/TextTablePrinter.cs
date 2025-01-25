@@ -11,6 +11,46 @@ using Trustsoft.TextTables.Contracts;
 
 internal class TextTablePrinter
 {
+    /// <summary>
+    ///   Returns a new string that center aligns the characters in a
+    ///   string by padding them on the left and right with a specified
+    ///   character, of a specified total length.
+    /// </summary>
+    /// <param name="source"> The source string. </param>
+    /// <param name="desiredWidth"> The number of characters to pad the source string. </param>
+    /// <param name="paddingChar"> The padding character. </param>
+    /// <returns>
+    ///   The modified source string padded with as many paddingChar
+    ///   characters needed to create a length of totalWidth.
+    /// </returns>
+    private static string PadCenter(string source, int desiredWidth, char paddingChar = ' ')
+    {
+        var spaces = desiredWidth - source.Length;
+        var padLeft = spaces / 2 + source.Length;
+        return source.PadLeft(padLeft, paddingChar).PadRight(desiredWidth, paddingChar);
+    }
+
+    private static string CreateDivider(PrintContext ctx, int width)
+    {
+        return $"{ctx.Indent}+{new string('-', width)}+";
+    }
+
+    private string BuildLineFormat(PrintContext ctx, char left, char right,
+                                   char columnDivider, char indentChar)
+    {
+        string Align(TableColumn column, int i, int wide)
+        {
+            return $"{{{i},{(column.Alignment == Alignment.Left ? "-" : "")}{wide}}}";
+        }
+
+        var indent = ctx.Indent;
+        var contentIndent = new string(indentChar, ctx.ContentIndent.Length);
+        var columnLengths = ctx.ColumnLengths;
+        var formats = ctx.Table.Columns.Select((column, i) => Align(column, i, columnLengths[i]));
+        var lineFormat = formats.Aggregate((l, r) => $"{l}{contentIndent}{columnDivider}{contentIndent}{r}");
+        return $"{indent}{left}{contentIndent}{lineFormat}{contentIndent}{right}";
+    }
+
     private int GetTableWidth(ITextTable table)
     {
         // add borders
@@ -68,27 +108,20 @@ internal class TextTablePrinter
 
     private void PrintRuler(PrintContext ctx)
     {
-        var s = ctx.Indent;
+        var s1 = ctx.Indent;
+        var s2 = ctx.Indent;
 
         for (var i = 0; i < ctx.TableWidth; i++)
         {
             var x = i + 1;
             var y = x % 10;
 
-            s += y == 0 ? $"{x / 10}" : " ";
+            s1 += y == 0 ? $"{x / 10}" : " ";
+            s2 += $"{y}";
         }
 
-        ctx.OutputTo.WriteLine(s);
-        s = ctx.Indent;
-
-        for (var i = 0; i < ctx.TableWidth; i++)
-        {
-            var x = i + 1;
-            var y = x % 10;
-            s += $"{y}";
-        }
-
-        ctx.OutputTo.WriteLine(s);
+        ctx.OutputTo.WriteLine(s1);
+        ctx.OutputTo.WriteLine(s2);
     }
 
     private void PrintTitle(PrintContext ctx)
@@ -98,102 +131,59 @@ internal class TextTablePrinter
 
         if (ctx.ShouldShowTopBorder)
         {
-            var divider = $"{ctx.Indent}+{new string('-', titleArea)}+";
-            ctx.OutputTo.WriteLine("T" + divider[1..]);
+            var divider = CreateDivider(ctx, titleArea);
+            ctx.OutputTo.WriteLine(divider);
         }
 
-        var leftIndent = (titleArea - ctx.Table.Title.Length) / 2;
-        var leftPart = new string(' ', leftIndent);
-        var rightPart = new string(' ', (titleArea - ctx.Table.Title.Length) - leftIndent);
-        var lineFormat = $"{ctx.Indent}|{leftPart}{ctx.Table.Title}{rightPart}|";
+        //var leftIndent = (titleArea - ctx.Table.Title.Length) / 2;
+        //var leftPart = new string(' ', leftIndent);
+        //var rightPart = new string(' ', (titleArea - ctx.Table.Title.Length) - leftIndent);
+        //var lineFormat = $"{ctx.Indent}|{leftPart}{ctx.Table.Title}{rightPart}|";
+        var lineFormat = $"{ctx.Indent}|{PadCenter(ctx.Table.Title, titleArea)}|";
         ctx.OutputTo.WriteLine(lineFormat);
     }
 
     private void PrintHeader(PrintContext ctx)
     {
-        string GetAlignmentSpecifier(TableColumn column)
-        {
-            return column.Alignment switch
-            {
-                Alignment.Left => "-",
-                Alignment.Right => "",
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
-
-        var widths = this.GetColumnWidths(ctx.Table).ToList();
-
-        var indentWide = 2 * ctx.Table.Options.ContentIndent;
-        var contentAreas = widths.Select(w => w + indentWide).ToList();
-        var div = ctx.Indent;
-        div += Enumerable.Range(0, ctx.Table.Columns.Count)
-                         .Select(i => "+{" + i + "," + "-" + contentAreas[i] + "}")
-                         .Aggregate((a, b) => $"{a}{b}") + "+";
-
-        var divider = string.Format(div, contentAreas.Select(object (length) => new string('-', length)).ToArray());
-
         if (ctx.ShouldShowTopBorder || ctx.ShouldShowTitle)
         {
-            ctx.OutputTo.WriteLine("H" + divider[1..]);
+            var div = this.BuildLineFormat(ctx, '+', '+', '+', '-');
+            var objects = ctx.ColumnLengths.Select(object (number) => new string('-', number)).ToArray();
+            ctx.OutputTo.WriteLine(div, objects);
         }
 
-        var lineFormat = ctx.Indent;
-        lineFormat += Enumerable.Range(0, ctx.Table.Columns.Count)
-                                .Select(i => "|" + ctx.ContentIndent + "{" + i + "," +
-                                             GetAlignmentSpecifier(ctx.Table.Columns[i]) + widths[i] + "}")
-                                .Aggregate((a, b) => $"{a}{ctx.ContentIndent}{b}") + ctx.ContentIndent + "|";
-        // print column names
-        ctx.OutputTo.WriteLine(lineFormat, ctx.Table.Columns.Select(object (column) => column.Name).ToArray());
+        var fmt = this.BuildLineFormat(ctx, '|', '|', '|', ' ');
+        var columnNames = ctx.Table.Columns.Select(object (column) => column.Name);
+        ctx.OutputTo.WriteLine(fmt, columnNames.ToArray());
     }
 
     private void PrintRows(PrintContext ctx)
     {
-        string GetAlignmentSpecifier(TableColumn column)
+        var div = this.BuildLineFormat(ctx, '+', '+', '+', '-');
+        var objects = ctx.ColumnLengths.Select(object (number) => new string('-', number)).ToArray();
+        var divider = string.Format(div, objects);
+
+        var fmt = this.BuildLineFormat(ctx, '|', '|', '|', ' ');
+        if (ctx.ShouldShowTopBorder || ctx.ShouldShowTitle || ctx.ShouldShowHeader)
         {
-            return column.Alignment switch
-            {
-                Alignment.Left => "-",
-                Alignment.Right => "",
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
-
-        var columnWidths = this.GetColumnWidths(ctx.Table).ToList();
-        var lineFormat = ctx.Indent;
-        lineFormat += Enumerable.Range(0, ctx.Table.Columns.Count)
-                                .Select(i => "|" + ctx.ContentIndent + "{" + i + "," +
-                                             GetAlignmentSpecifier(ctx.Table.Columns[i]) + columnWidths[i] + "}")
-                                .Aggregate((a, b) => $"{a}{ctx.ContentIndent}{b}") + ctx.ContentIndent + "|";
-        
-        var indentWide = 2 * ctx.Table.Options.ContentIndent;
-        var contentAreas = columnWidths.Select(w => w + indentWide).ToList();
-        var div = ctx.Indent;
-        div += Enumerable.Range(0, ctx.Table.Columns.Count)
-                         .Select(i => "+{" + i + "," + "-" + contentAreas[i] + "}")
-                         .Aggregate((a, b) => $"{a}{b}") + "+";
-
-        var args = contentAreas.Select(object (length) => new string('-', length)).ToArray();
-        string divider = string.Format(div, args);
-
-        if (ctx.ShouldShowTopBorder || (ctx.ShouldShowTitle || ctx.ShouldShowHeader))
-        {
-            ctx.OutputTo.WriteLine("R" + divider[1..]);
+            ctx.OutputTo.WriteLine(divider);
         }
 
         foreach (var row in ctx.Table.Rows.SkipLast(1))
         {
-            ctx.OutputTo.WriteLine(lineFormat, row);
+            ctx.OutputTo.WriteLine(fmt, row);
+
             if (ctx.ShouldShowRowSeparator)
             {
                 ctx.OutputTo.WriteLine(divider);
             }
         }
 
-        ctx.OutputTo.WriteLine(lineFormat, ctx.Table.Rows.Last());
+        ctx.OutputTo.WriteLine(fmt, ctx.Table.Rows.Last());
 
         if (ctx.ShouldShowFooter)
         {
-            ctx.OutputTo.WriteLine("F" + divider[1..]);
+            ctx.OutputTo.WriteLine(divider);
         }
         else
         {
@@ -220,15 +210,11 @@ internal class TextTablePrinter
                       .Aggregate((a, b) => $"{a}{ctx.ContentIndent}{b}") + ctx.ContentIndent + "|";
 
         var footerArea = ctx.TableWidth - 2;
-        var divider = $"{ctx.Indent}+{new string('-', footerArea)}+";
-        //if (!ctx.ShouldShowRowSeparator)
-        //{
-        //    ctx.OutputTo.WriteLine("F" + divider[1..]);
-        //}
         ctx.OutputTo.WriteLine(lineFormat, ctx.Table.Footer.ToArray());
 
         if (ctx.ShouldShowBottomBorder)
         {
+            var divider = CreateDivider(ctx, footerArea);
             ctx.OutputTo.WriteLine(divider);
         }
     }
@@ -240,7 +226,7 @@ internal class TextTablePrinter
         return PrintContext.Create(table, layout, output, columnLengths, tableWidth);
     }
 
-    public void PrintTo(ITextTable table, TableLayout layout, TextWriter? output = null)
+    public void PrintTo(ITextTable table, TableLayout layout, TextWriter output)
     {
         var ctx = CreateContext(table, layout, output);
 
