@@ -37,18 +37,24 @@ internal class PrintContext
 
     public bool ShouldShowBottomBorder => this.Layout != TableLayout.Minimal;
 
-    public static PrintContext Create(ITextTable table, TableLayout layout, TextWriter? output)
+    public static PrintContext Create(ITextTable table,
+                                      TableLayout layout,
+                                      TextWriter? output,
+                                      List<int> columnLengths,
+                                      int tableWidth)
     {
         return new PrintContext
         {
             Table = table,
             Indent = new string(' ', table.Options.Indent),
             ContentIndent = new string(' ', table.Options.ContentIndent),
-            ShouldShowTitle = table.Options.ShowTitle && table.Title.Length > 0,
-            ShouldShowHeader = table.Options.ShowHeader,
+            ShouldShowTitle = table.Options.ShowTitle && !string.IsNullOrEmpty(table.Title),
+            ShouldShowHeader = table.Options.ShowHeader && table.Columns != null && table.Columns.Any(),
             ShouldShowFooter = table.Options.ShowFooter && table.Footer.Count > 0,
             OutputTo = output ?? table.Options.OutputTo,
             Layout = layout,
+            ColumnLengths = columnLengths,
+            TableWidth = tableWidth,
         };
     }
 }

@@ -233,14 +233,11 @@ internal class TextTablePrinter
         }
     }
 
-    private PrintContext CreateContext(ITextTable table, TableLayout layout, TextWriter? output = null)
+    private PrintContext CreateContext(ITextTable table, TableLayout layout, TextWriter output)
     {
-        var ctx = PrintContext.Create(table, layout, output);
-        ctx.OutputTo = output ?? table.Options.OutputTo;
-        ctx.TableWidth = this.GetTableWidth(table);
-        ctx.ColumnLengths = this.GetColumnWidths(table).ToList();
-
-        return ctx;
+        var tableWidth = this.GetTableWidth(table);
+        var columnLengths = this.GetColumnWidths(table).ToList();
+        return PrintContext.Create(table, layout, output, columnLengths, tableWidth);
     }
 
     public void PrintTo(ITextTable table, TableLayout layout, TextWriter? output = null)
