@@ -3,9 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <BaseOutputPath>..\artifacts\</BaseOutputPath>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 

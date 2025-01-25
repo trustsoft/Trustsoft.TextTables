@@ -17,7 +17,8 @@
         <AssemblyVersion>1.0.0</AssemblyVersion>
         <FileVersion>1.0.0.0</FileVersion>
         <VersionPrefix>1.0.0</VersionPrefix>
-        <VersionSuffix>rc1</VersionSuffix>
+        <VersionSuffix>rc2</VersionSuffix>
+        <BaseOutputPath>..\..\artifacts\</BaseOutputPath>
     </PropertyGroup>
 
     <!-- NuGet Package -->
@@ -44,13 +45,16 @@
         <PackageTags>text;table;console;texttable;consoletable</PackageTags>
         <PackageDescription>
             <![CDATA[
-Work with Text Tables with ease.
+Work with text tables with ease.
 Supports .NET 6.0-9.0.
             ]]>
         </PackageDescription>
         <PackageReleaseNotes>
             ChangeLog
             ---------
+            1.0.0-rc2 Code refactoring and cleanup.
+            1.0.0-rc2 Updated usage sample.
+            1.0.0-rc2 Add output layout options.
             1.0.0-rc1 First public Nuget package version.
         </PackageReleaseNotes>
     </PropertyGroup>
