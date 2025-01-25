@@ -1,0 +1,23 @@
+<!--
+// ========================================================================================================
+//  Description: Common MSBuild configuration for sample and demo projects ('samples' folder)
+//  Author: msukhanov (sukhanov.maxim@gmail.com)
+//  Links: 
+//    https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild
+//    https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties 
+// ========================================================================================================
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <!-- Import parent Directory.build.props -->
+    <Import Project="../Directory.Build.props" />
+
+    <!-- Common sample and demo project properties -->
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <LangVersion>default</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <BaseOutputPath>..\artifacts\</BaseOutputPath>
+    </PropertyGroup>
+
+</Project>
