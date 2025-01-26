@@ -8,15 +8,15 @@
 namespace Trustsoft.TextTables;
 
 /// <summary>
-///   Represents the column in <see cref="TextTable"/>.
+///   Represents the <see cref="TextTable"/> column.
 /// </summary>
 public class TableColumn
 {
     /// <summary>
     ///   Defines default content alignment.
     /// </summary>
-    /// <remarks> Defaults to <see cref="Alignment"/>. </remarks>
-    public static Alignment DefaultAlignment = Alignment.Left;
+    /// <remarks> Default value for <see cref="TableColumn.Alignment"/> property. </remarks>
+    public static Alignment DefaultAlignment { get; set; } = Alignment.Left;
 
     /// <summary>
     ///   Gets or sets the name for the column.

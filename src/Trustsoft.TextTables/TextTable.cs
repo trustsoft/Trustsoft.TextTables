@@ -21,7 +21,7 @@ public class TextTable : ITextTable
     public string Title { get; set; } = string.Empty;
 
     /// <summary>
-    ///   Defines the columns of the table.
+    ///   Gets the collection of columns contained in this table.
     /// </summary>
     public List<TableColumn> Columns { get; }
 

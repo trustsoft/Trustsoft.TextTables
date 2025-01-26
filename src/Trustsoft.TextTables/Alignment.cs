@@ -13,12 +13,17 @@ namespace Trustsoft.TextTables;
 public enum Alignment
 {
     /// <summary>
-    ///   Content is aligned on the left.
+    ///   Content is aligned to the left.
     /// </summary>
     Left = 0,
 
     /// <summary>
-    ///   Content is aligned on the right.
+    ///   Content is aligned to the right.
     /// </summary>
     Right = 1,
+
+    /// <summary>
+    ///   Content is centered.
+    /// </summary>
+    Center = 2,
 }

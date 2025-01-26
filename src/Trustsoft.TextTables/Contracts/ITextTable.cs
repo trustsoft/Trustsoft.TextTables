@@ -18,7 +18,7 @@ public interface ITextTable
     string Title { get; set; }
 
     /// <summary>
-    ///   The columns of the table.
+    ///   The collection of columns contained in this table.
     /// </summary>
     List<TableColumn> Columns { get; }
 
@@ -35,7 +35,7 @@ public interface ITextTable
     IList<object?> Footer { get; }
 
     /// <summary>
-    ///   Defines table configuration options.
+    ///   The configuration options of the table.
     /// </summary>
     TableOptions Options { get; set; }
 
