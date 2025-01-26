@@ -27,9 +27,9 @@ internal static class Program
         return users;
     }
 
-    private static TextTable CreateTextTable1(List<User> users)
+    private static List<string> CreateStringColumns()
     {
-        List<string> columns =
+        return
         [
             "First name",
             "Last name",
@@ -37,6 +37,23 @@ internal static class Program
             "Age",
             "Email"
         ];
+    }
+
+    private static List<(string, Alignment)> CreateColumns()
+    {
+        return
+        [
+            ("First name", Alignment.Left),
+            ("Last name", Alignment.Left),
+            ("Birthday", Alignment.Left),
+            ("Age", Alignment.Right),
+            ("Email", Alignment.Right),
+        ];
+    }
+
+    private static TextTable CreateTextTable1(List<User> users)
+    {
+        var columns = CreateStringColumns();
 
         var table = new TextTable(columns);
         foreach (var user in users)
@@ -52,16 +69,9 @@ internal static class Program
 
     private static TextTable CreateTextTable2(List<User> users)
     {
-        List<(string, Alignment)> columns2 = 
-        [
-            ("First name", Alignment.Left),
-            ("Last name", Alignment.Left),
-            ("Birthday", Alignment.Left),
-            ("Age", Alignment.Right),
-            ("Email", Alignment.Right),
-        ];
+        List<(string, Alignment)> columns = CreateColumns();
 
-        var table = new TextTable(columns2);
+        var table = new TextTable(columns);
         table.Title = "User List";
         table.Options.ShowTitle = false;
         table.Options.ShowHeader = true;
@@ -76,14 +86,7 @@ internal static class Program
 
     private static TextTable CreateTextTable3(List<User> users)
     {
-        List<string> columns =
-        [
-            "First name",
-            "Last name",
-            "Birthday",
-            "Age",
-            "Email"
-        ];
+        List<string> columns = CreateStringColumns();
 
         var table = new TextTable(columns);
 
@@ -101,16 +104,9 @@ internal static class Program
 
     private static TextTable CreateTextTable4(List<User> users)
     {
-        List<(string, Alignment)> columns2 =
-        [
-            ("First name", Alignment.Left),
-            ("Last name", Alignment.Left),
-            ("Birthday", Alignment.Left),
-            ("Age", Alignment.Right),
-            ("Email", Alignment.Right),
-        ];
+        var columns = CreateColumns();
 
-        var table = new TextTable(columns2);
+        var table = new TextTable(columns);
         table.Title = "User List";
         table.Options.ShowTitle = false;
         table.Options.ShowHeader = true;
@@ -127,16 +123,9 @@ internal static class Program
 
     private static TextTable CreateTextTable5(List<User> users)
     {
-        List<(string, Alignment)> columns2 =
-        [
-            ("First name", Alignment.Left),
-            ("Last name", Alignment.Left),
-            ("Birthday", Alignment.Left),
-            ("Age", Alignment.Right),
-            ("Email", Alignment.Right),
-        ];
+        List<(string, Alignment)> columns = CreateColumns();
 
-        var table = new TextTable(columns2);
+        var table = new TextTable(columns);
         table.Title = "User List";
         table.Options.ShowTitle = true;
         table.Options.ShowHeader = true;
@@ -173,7 +162,7 @@ internal static class Program
 
     static void Main()
     {
-        TableLayout[] layouts = [TableLayout.Standard,TableLayout.Compact,TableLayout.Minimal];
+        TableLayout[] layouts = [TableLayout.Standard, TableLayout.Compact, TableLayout.Minimal];
 
         var users = CreateUsers();
         ITextTable table = CreateTextTable1(users);
