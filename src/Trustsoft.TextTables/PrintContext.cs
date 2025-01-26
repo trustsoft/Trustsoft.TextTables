@@ -11,6 +11,8 @@ using Trustsoft.TextTables.Contracts;
 
 internal class PrintContext
 {
+    private const char SpaceChar = ' ';
+
     public ITextTable Table { get; private set; }
     
     public bool ShouldShowTitle { get; private set; }
@@ -29,7 +31,7 @@ internal class PrintContext
     
     public int TableWidth { get; set; }
     
-    public List<int> ColumnLengths { get; set; }
+    public List<int> ColumnWidths { get; set; }
     
     public bool ShouldShowRowSeparator => this.Layout is TableLayout.Standard;
 
@@ -37,24 +39,24 @@ internal class PrintContext
 
     public bool ShouldShowBottomBorder => this.Layout != TableLayout.Minimal;
 
-    public static PrintContext Create(ITextTable table,
-                                      TableLayout layout,
-                                      TextWriter? output,
-                                      List<int> columnLengths,
-                                      int tableWidth)
+    public PrintContext(ITextTable table, TextWriter outputTo, TableLayout layout,
+                        List<int> columnWidths, int tableWidth)
     {
-        return new PrintContext
-        {
-            Table = table,
-            Indent = new string(' ', table.Options.Indent),
-            ContentIndent = new string(' ', table.Options.ContentIndent),
-            ShouldShowTitle = table.Options.ShowTitle && !string.IsNullOrEmpty(table.Title),
-            ShouldShowHeader = table.Options.ShowHeader && table.Columns != null && table.Columns.Any(),
-            ShouldShowFooter = table.Options.ShowFooter && table.Footer.Count > 0,
-            OutputTo = output ?? table.Options.OutputTo,
-            Layout = layout,
-            ColumnLengths = columnLengths,
-            TableWidth = tableWidth,
-        };
+        this.ColumnWidths = columnWidths;
+        this.ContentIndent = new string(SpaceChar, table.Options.ContentIndent);
+        this.ContentIndentSize = table.Options.ContentIndent;
+        this.Indent = new string(SpaceChar, table.Options.Indent);
+        this.IndentSize = table.Options.Indent;
+        this.Layout = layout;
+        this.OutputTo = outputTo;
+        this.ShouldShowFooter = table.Options.ShowFooter && table.Footer is { Count: > 0 };
+        this.ShouldShowHeader = table.Options.ShowHeader && table.Columns is { Count: > 0 };
+        this.ShouldShowTitle = table.Options.ShowTitle && !string.IsNullOrEmpty(table.Title);
+        this.Table = table;
+        this.TableWidth = tableWidth;
     }
+
+    public int ContentIndentSize { get; set; }
+
+    public int IndentSize { get; set; }
 }

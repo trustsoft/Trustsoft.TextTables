@@ -21,4 +21,9 @@ public enum Alignment
     ///   Content is aligned on the right.
     /// </summary>
     Right = 1,
+
+    /// <summary>
+    ///   Content is centered.
+    /// </summary>
+    Center = 2,
 }
