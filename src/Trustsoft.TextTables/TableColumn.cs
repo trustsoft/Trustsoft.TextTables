@@ -8,7 +8,7 @@
 namespace Trustsoft.TextTables;
 
 /// <summary>
-///   Represents the column in <see cref="TextTable"/>.
+///   Represents the <see cref="TextTable"/> column.
 /// </summary>
 public class TableColumn
 {
