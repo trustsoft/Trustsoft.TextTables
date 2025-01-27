@@ -43,7 +43,7 @@ internal static class Program
     {
         return
         [
-            ("First name", Alignment.Left),
+            ("First name", Alignment.Center),
             ("Last name", Alignment.Left),
             ("Birthday", Alignment.Left),
             ("Age", Alignment.Right),
@@ -80,7 +80,7 @@ internal static class Program
             table.AddRow(user.FirstName, user.LastName, user.Birthday, user.Age, user.Email);
         }
         
-        table.AddFooter("Test footer content part 1", "part 2", "part 3");
+        table.AddFooter("Test single part footer content");
         return table;
     }
 
@@ -136,7 +136,7 @@ internal static class Program
             table.AddRow(user.FirstName, user.LastName, user.Birthday, user.Age, user.Email);
         }
 
-        table.AddFooter("Test footer content part 1", "part 2", "part 3");
+        table.AddFooter("Test single part footer content");
         return table;
     }
 
