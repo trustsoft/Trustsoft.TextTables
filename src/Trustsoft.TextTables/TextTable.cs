@@ -18,7 +18,7 @@ public class TextTable : ITextTable
     /// <summary>
     ///   Gets or sets the title of this table.
     /// </summary>
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; set; }
 
     /// <summary>
     ///   Gets the collection of columns contained in this table.
@@ -42,13 +42,45 @@ public class TextTable : ITextTable
 
     /// <summary>
     ///   Initializes a new instance of the <see cref="TextTable" /> class
+    ///   with the specified <paramref name="options"/>,
+    ///   <paramref name="columns" /> and <paramref name="title"/>.
+    /// </summary>
+    /// <param name="options"> The table configuration options. </param>
+    /// <param name="columns"> The table columns. </param>
+    /// <param name="title"> The table title. </param>
+    public TextTable(TableOptions options, IList<TableColumn> columns, string title)
+    {
+        this.Options = options;
+        this.Columns = columns;
+        this.Title = title;
+    }
+
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="TextTable" /> class
+    ///   with the specified <paramref name="columns" /> and <paramref name="title"/>.
+    /// </summary>
+    /// <param name="columns"> The table columns. </param>
+    /// <param name="title"> The table title. </param>
+    public TextTable(IList<TableColumn> columns, string title) : this(new TableOptions(), columns, title)
+    {
+    }
+
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="TextTable" /> class
     ///   with the specified <paramref name="columns" />.
     /// </summary>
     /// <param name="columns"> The table columns. </param>
-    public TextTable(List<TableColumn> columns)
+    public TextTable(IList<TableColumn> columns) : this(columns, string.Empty)
     {
-        this.Options = new TableOptions();
-        this.Columns = columns;
+    }
+
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="TextTable" /> class
+    ///   with the specified <paramref name="columns" />.
+    /// </summary>
+    /// <param name="columns"> The table columns. </param>
+    public TextTable(IEnumerable<TableColumn> columns) : this(columns.ToList())
+    {
     }
 
     /// <summary>
@@ -56,21 +88,36 @@ public class TextTable : ITextTable
     ///   with columns of specified <paramref name="columnNames">column names</paramref>.
     /// </summary>
     /// <param name="columnNames"> The column names. </param>
-    public TextTable(List<string> columnNames)
-            : this(columnNames.Select(name => new TableColumn(name)).ToList())
+    public TextTable(IList<string> columnNames) : this(columnNames.Select(name => new TableColumn(name)))
     {
-        this.Options = new TableOptions();
     }
 
     /// <summary>
     ///   Initializes a new instance of the <see cref="TextTable" /> class
-    ///   with the specified tuples of column name and content alignment.
+    ///   with columns of specified <paramref name="columnNames">column names</paramref>.
+    /// </summary>
+    /// <param name="columnNames"> The column names. </param>
+    public TextTable(IEnumerable<string> columnNames) : this(columnNames.ToList())
+    {
+    }
+
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="TextTable" /> class
+    ///   with columns of specified <paramref name="columnNames">column names</paramref>.
+    /// </summary>
+    /// <param name="columnNames"> The column names. </param>
+    public TextTable(params string[] columnNames) : this(columnNames.ToList())
+    {
+    }
+
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="TextTable" /> class
+    ///   with the specified <paramref name="tuples"/> of column name and content alignment.
     /// </summary>
     /// <param name="tuples"> The pairs of column name and content alignment. </param>
-    public TextTable(List<(string name, Alignment alignment)> tuples)
-            : this(tuples.Select(tuple => new TableColumn(tuple.name, tuple.alignment)).ToList())
+    public TextTable(IList<(string name, Alignment alignment)> tuples)
+            : this(tuples.Select(tuple => new TableColumn(tuple.name, tuple.alignment)))
     {
-        this.Options = new TableOptions();
     }
 
     /// <summary>
