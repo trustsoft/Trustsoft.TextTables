@@ -11,25 +11,6 @@ using Trustsoft.TextTables.Contracts;
 
 internal static class TextTablePrinter
 {
-    /// <summary>
-    ///   Returns a new string that center aligns the characters in a
-    ///   string by padding them on the left and right with a specified
-    ///   character, of a specified <paramref name="totalLength"/>.
-    /// </summary>
-    /// <param name="source"> The source string. </param>
-    /// <param name="totalLength"> The number of characters to pad the source string. </param>
-    /// <param name="paddingChar"> The padding character. </param>
-    /// <returns>
-    ///   The modified source string padded with as many <paramref name="paddingChar"/>
-    ///   characters needed to create a length of <paramref name="totalLength"/>.
-    /// </returns>
-    private static string PadCenter(string source, int totalLength, char paddingChar = ' ')
-    {
-        var spaces = totalLength - source.Length;
-        var padLeft = spaces / 2 + source.Length;
-        return source.PadLeft(padLeft, paddingChar).PadRight(totalLength, paddingChar);
-    }
-
     private static string CreateDivider(PrintContext ctx, int width)
     {
         return $"{ctx.Indent}+{new string('-', width)}+";
@@ -176,7 +157,7 @@ internal static class TextTablePrinter
             ctx.OutputTo.WriteLine(divider);
         }
 
-        var lineFormat = $"{ctx.Indent}|{PadCenter(ctx.Table.Title, titleArea)}|";
+        var lineFormat = $"{ctx.Indent}|{ctx.Table.Title.PadCenter(titleArea)}|";
         ctx.OutputTo.WriteLine(lineFormat);
     }
 

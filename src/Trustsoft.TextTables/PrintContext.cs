@@ -13,31 +13,35 @@ internal class PrintContext
 {
     private const char SpaceChar = ' ';
 
-    public ITextTable Table { get; private set; }
-    
-    public bool ShouldShowTitle { get; private set; }
-    
-    public bool ShouldShowHeader { get; private set; }
-    
-    public bool ShouldShowFooter { get; private set; }
-    
-    public TableLayout Layout { get; set; }
-    
-    public TextWriter OutputTo { get; set; }
-    
-    public string Indent { get; private set; }
-    
-    public string ContentIndent { get; private set; }
-    
-    public int TableWidth { get; set; }
-    
     public List<int> ColumnWidths { get; set; }
-    
+
+    public string Indent { get; private set; }
+
+    public int IndentSize { get; set; }
+
+    public string ContentIndent { get; private set; }
+
+    public int ContentIndentSize { get; set; }
+
+    public TableLayout Layout { get; set; }
+
+    public TextWriter OutputTo { get; set; }
+
+    public bool ShouldShowBottomBorder => this.Layout != TableLayout.Minimal;
+
+    public bool ShouldShowFooter { get; private set; }
+
+    public bool ShouldShowHeader { get; private set; }
+
     public bool ShouldShowRowSeparator => this.Layout is TableLayout.Standard;
+
+    public bool ShouldShowTitle { get; private set; }
 
     public bool ShouldShowTopBorder => this.Layout != TableLayout.Minimal;
 
-    public bool ShouldShowBottomBorder => this.Layout != TableLayout.Minimal;
+    public ITextTable Table { get; private set; }
+
+    public int TableWidth { get; set; }
 
     public PrintContext(ITextTable table, TextWriter outputTo, TableLayout layout,
                         List<int> columnWidths, int tableWidth)
@@ -55,8 +59,4 @@ internal class PrintContext
         this.Table = table;
         this.TableWidth = tableWidth;
     }
-
-    public int ContentIndentSize { get; set; }
-
-    public int IndentSize { get; set; }
 }
