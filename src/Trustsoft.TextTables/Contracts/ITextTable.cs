@@ -13,29 +13,29 @@ namespace Trustsoft.TextTables.Contracts;
 public interface ITextTable
 {
     /// <summary>
-    ///   The title of the table.
+    ///   Gets or sets the title of the table.
     /// </summary>
     string Title { get; set; }
 
     /// <summary>
-    ///   The collection of columns contained in this table.
+    ///   Gets the collection of columns contained in this table.
     /// </summary>
     List<TableColumn> Columns { get; }
 
     /// <summary>
-    ///   The collection of rows that belong to this table.
+    ///   Gets the collection of rows that belong to this table.
     /// </summary>
     /// <value> The rows data. </value>
     IList<object?[]> Rows { get; }
     
     /// <summary>
-    ///   The collection of footer data that belong to this table.
+    ///   Gets the collection of footer data that belong to this table.
     /// </summary>
     /// <value> The footer data. </value>
     IList<object?> Footer { get; }
 
     /// <summary>
-    ///   The configuration options of the table.
+    ///   Gets or sets the configuration options of this table.
     /// </summary>
     TableOptions Options { get; set; }
 

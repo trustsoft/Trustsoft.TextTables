@@ -16,7 +16,7 @@ using Trustsoft.TextTables.Contracts;
 public class TextTable : ITextTable
 {
     /// <summary>
-    ///   Gets or sets the title of the table.
+    ///   Gets or sets the title of this table.
     /// </summary>
     public string Title { get; set; } = string.Empty;
 
@@ -36,7 +36,7 @@ public class TextTable : ITextTable
     public IList<object?> Footer { get; } = [];
 
     /// <summary>
-    ///   Defines this table configuration options.
+    ///   Gets or sets the configuration options of this table.
     /// </summary>
     public TableOptions Options { get; set; }
 
