@@ -23,7 +23,7 @@ public class TextTable : ITextTable
     /// <summary>
     ///   Gets the collection of columns contained in this table.
     /// </summary>
-    public List<TableColumn> Columns { get; }
+    public IList<TableColumn> Columns { get; }
 
     /// <summary>
     ///   Gets the collection of rows that belong to this table.

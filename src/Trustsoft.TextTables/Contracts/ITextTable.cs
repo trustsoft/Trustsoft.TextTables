@@ -20,7 +20,7 @@ public interface ITextTable
     /// <summary>
     ///   Gets the collection of columns contained in this table.
     /// </summary>
-    List<TableColumn> Columns { get; }
+    IList<TableColumn> Columns { get; }
 
     /// <summary>
     ///   Gets the collection of rows that belong to this table.
