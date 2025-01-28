@@ -177,4 +177,17 @@ public class TextTable : ITextTable
     {
         TextTablePrinter.PrintTo(output, this, layout);
     }
+
+    /// <summary>
+    ///   Returns a <see cref="System.String" /> that represents this table
+    ///   using <see cref="TableLayout.Default"/> output layout.
+    /// </summary>
+    /// <returns> A <see cref="System.String" /> that represents this table. </returns>
+    public override string ToString()
+    {
+        using var writer = new StringWriter();
+        this.WriteTo(writer);
+
+        return writer.ToString();
+    }
 }
