@@ -47,10 +47,4 @@ public class TableOptions
     /// </summary>
     /// <remarks> Defaults to <see langword="true"/>. </remarks>
     public bool ShowFooter { get; set; } = true;
-
-    /// <summary>
-    ///   The <see cref="TextWriter" /> to write table data to.
-    /// </summary>
-    /// <remarks> Defaults to <see cref="Console.Out" />. </remarks>
-    public TextWriter OutputTo { get; set; } = Console.Out;
 }

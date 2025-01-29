@@ -155,7 +155,7 @@ internal static class Program
         {
             Console.WriteLine(GetMessage(table, $"{id}.{++count}", layout));
             Console.WriteLine();
-            table.Write(layout);
+            table.WriteTo(Console.Out, layout);
             Console.WriteLine();
         }
     }

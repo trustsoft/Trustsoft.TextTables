@@ -240,12 +240,12 @@ internal static class TextTablePrinter
         }
     }
 
-    private static PrintContext CreateContext(ITextTable table, TableLayout layout, TextWriter? output)
+    private static PrintContext CreateContext(ITextTable table, TableLayout layout, TextWriter output)
     {
         var tableWidth = GetTableWidth(table);
         var columnWidths = GetColumnWidths(table).ToList();
         return new PrintContext(table: table,
-                                outputTo: output ?? table.Options.OutputTo,
+                                outputTo: output,
                                 layout: layout,
                                 columnWidths: columnWidths,
                                 tableWidth: tableWidth);

@@ -40,13 +40,6 @@ public interface ITextTable
     TableOptions Options { get; set; }
 
     /// <summary>
-    ///   Writes table data to output defined by <see cref="P:OutputTo" />
-    ///   and in specified output <paramref name="layout"/>.
-    /// </summary>
-    /// <param name="layout"> The output layout. </param>
-    void Write(TableLayout layout = TableLayout.Default);
-
-    /// <summary>
     ///   Writes table data to specified <paramref name="output" />
     ///   and in specified output <paramref name="layout"/>.
     /// </summary>
