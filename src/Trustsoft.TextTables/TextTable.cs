@@ -181,4 +181,18 @@ public class TextTable : ITextTable
 
         return writer.ToString();
     }
+
+    /// <summary>
+    ///   Returns a <see cref="System.String" /> that represents this table
+    ///   using <paramref name="layout"/> output layout.
+    /// </summary>
+    /// <param name="layout"> The output layout. </param>
+    /// <returns> A <see cref="System.String" /> that represents this table. </returns>
+    public string ToString(TableLayout layout)
+    {
+        using var writer = new StringWriter();
+        this.WriteTo(writer, layout);
+
+        return writer.ToString();
+    }
 }
