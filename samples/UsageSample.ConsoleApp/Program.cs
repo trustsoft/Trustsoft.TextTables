@@ -155,7 +155,10 @@ internal static class Program
         {
             Console.WriteLine(GetMessage(table, $"{id}.{++count}", layout));
             Console.WriteLine();
-            table.WriteTo(Console.Out, layout);
+            table.ToConsole(layout);
+            table.ToFile("1.txt");
+            using var fs = new FileStream("2.txt", FileMode.OpenOrCreate);
+            table.ToStream(fs);
             Console.WriteLine();
         }
     }
