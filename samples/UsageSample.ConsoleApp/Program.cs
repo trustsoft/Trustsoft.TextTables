@@ -27,9 +27,9 @@ internal static class Program
         return users;
     }
 
-    private static TextTable CreateTextTable1(List<User> users)
+    private static List<string> CreateStringColumns()
     {
-        List<string> columns =
+        return
         [
             "First name",
             "Last name",
@@ -37,6 +37,23 @@ internal static class Program
             "Age",
             "Email"
         ];
+    }
+
+    private static List<(string, Alignment)> CreateColumns()
+    {
+        return
+        [
+            ("First name", Alignment.Center),
+            ("Last name", Alignment.Left),
+            ("Birthday", Alignment.Left),
+            ("Age", Alignment.Right),
+            ("Email", Alignment.Right),
+        ];
+    }
+
+    private static TextTable CreateTextTable1(List<User> users)
+    {
+        var columns = CreateStringColumns();
 
         var table = new TextTable(columns);
         foreach (var user in users)
@@ -52,16 +69,9 @@ internal static class Program
 
     private static TextTable CreateTextTable2(List<User> users)
     {
-        List<(string, Alignment)> columns2 = 
-        [
-            ("First name", Alignment.Left),
-            ("Last name", Alignment.Left),
-            ("Birthday", Alignment.Left),
-            ("Age", Alignment.Right),
-            ("Email", Alignment.Right),
-        ];
+        List<(string, Alignment)> columns = CreateColumns();
 
-        var table = new TextTable(columns2);
+        var table = new TextTable(columns);
         table.Title = "User List";
         table.Options.ShowTitle = false;
         table.Options.ShowHeader = true;
@@ -70,20 +80,13 @@ internal static class Program
             table.AddRow(user.FirstName, user.LastName, user.Birthday, user.Age, user.Email);
         }
         
-        table.AddFooter("Test footer content part 1", "part 2", "part 3");
+        table.AddFooter("Test single part footer content");
         return table;
     }
 
     private static TextTable CreateTextTable3(List<User> users)
     {
-        List<string> columns =
-        [
-            "First name",
-            "Last name",
-            "Birthday",
-            "Age",
-            "Email"
-        ];
+        List<string> columns = CreateStringColumns();
 
         var table = new TextTable(columns);
 
@@ -101,16 +104,9 @@ internal static class Program
 
     private static TextTable CreateTextTable4(List<User> users)
     {
-        List<(string, Alignment)> columns2 =
-        [
-            ("First name", Alignment.Left),
-            ("Last name", Alignment.Left),
-            ("Birthday", Alignment.Left),
-            ("Age", Alignment.Right),
-            ("Email", Alignment.Right),
-        ];
+        var columns = CreateColumns();
 
-        var table = new TextTable(columns2);
+        var table = new TextTable(columns);
         table.Title = "User List";
         table.Options.ShowTitle = false;
         table.Options.ShowHeader = true;
@@ -127,16 +123,9 @@ internal static class Program
 
     private static TextTable CreateTextTable5(List<User> users)
     {
-        List<(string, Alignment)> columns2 =
-        [
-            ("First name", Alignment.Left),
-            ("Last name", Alignment.Left),
-            ("Birthday", Alignment.Left),
-            ("Age", Alignment.Right),
-            ("Email", Alignment.Right),
-        ];
+        List<(string, Alignment)> columns = CreateColumns();
 
-        var table = new TextTable(columns2);
+        var table = new TextTable(columns);
         table.Title = "User List";
         table.Options.ShowTitle = true;
         table.Options.ShowHeader = true;
@@ -147,7 +136,7 @@ internal static class Program
             table.AddRow(user.FirstName, user.LastName, user.Birthday, user.Age, user.Email);
         }
 
-        table.AddFooter("Test footer content part 1", "part 2", "part 3");
+        table.AddFooter("Test single part footer content");
         return table;
     }
 
@@ -166,14 +155,17 @@ internal static class Program
         {
             Console.WriteLine(GetMessage(table, $"{id}.{++count}", layout));
             Console.WriteLine();
-            table.Write(layout);
+            table.ToConsole(layout);
+            table.ToFile("1.txt");
+            using var fs = new FileStream("2.txt", FileMode.OpenOrCreate);
+            table.ToStream(fs);
             Console.WriteLine();
         }
     }
 
     static void Main()
     {
-        TableLayout[] layouts = [TableLayout.Standard,TableLayout.Compact,TableLayout.Minimal];
+        TableLayout[] layouts = [TableLayout.Standard, TableLayout.Compact, TableLayout.Minimal];
 
         var users = CreateUsers();
         ITextTable table = CreateTextTable1(users);

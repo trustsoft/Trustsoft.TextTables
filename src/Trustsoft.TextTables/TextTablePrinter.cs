@@ -11,25 +11,6 @@ using Trustsoft.TextTables.Contracts;
 
 internal static class TextTablePrinter
 {
-    /// <summary>
-    ///   Returns a new string that center aligns the characters in a
-    ///   string by padding them on the left and right with a specified
-    ///   character, of a specified total length.
-    /// </summary>
-    /// <param name="source"> The source string. </param>
-    /// <param name="desiredWidth"> The number of characters to pad the source string. </param>
-    /// <param name="paddingChar"> The padding character. </param>
-    /// <returns>
-    ///   The modified source string padded with as many paddingChar
-    ///   characters needed to create a length of totalWidth.
-    /// </returns>
-    private static string PadCenter(string source, int desiredWidth, char paddingChar = ' ')
-    {
-        var spaces = desiredWidth - source.Length;
-        var padLeft = spaces / 2 + source.Length;
-        return source.PadLeft(padLeft, paddingChar).PadRight(desiredWidth, paddingChar);
-    }
-
     private static string CreateDivider(PrintContext ctx, int width)
     {
         return $"{ctx.Indent}+{new string('-', width)}+";
@@ -43,12 +24,54 @@ internal static class TextTablePrinter
             return $"{{{i},{(column.Alignment == Alignment.Left ? "-" : "")}{wide}}}";
         }
 
-        var indent = ctx.Indent;
-        var contentIndent = new string(indentChar, ctx.ContentIndent.Length);
-        var columnLengths = ctx.ColumnLengths;
-        var formats = ctx.Table.Columns.Select((column, i) => Align(column, i, columnLengths[i]));
+        var contentIndent = new string(indentChar, ctx.ContentIndentSize);
+        var formats = ctx.Table.Columns.Select((column, i) => Align(column, i, ctx.ColumnWidths[i]));
         var lineFormat = formats.Aggregate((l, r) => $"{l}{contentIndent}{columnDivider}{contentIndent}{r}");
-        return $"{indent}{left}{contentIndent}{lineFormat}{contentIndent}{right}";
+        return $"{ctx.Indent}{left}{contentIndent}{lineFormat}{contentIndent}{right}";
+    }
+
+    private static string BuildRowLineFormat(PrintContext ctx, object?[] row,
+                                             char left, char right, char columnDivider, char indentChar)
+    {
+        string Align(TableColumn column, int i, int wide, object? cell)
+        {
+            switch (column.Alignment)
+            {
+                case Alignment.Left:
+                case Alignment.Right:
+                {
+                    return $"{{{i},{(column.Alignment == Alignment.Left ? "-" : "")}{wide}}}";
+                }
+
+                case Alignment.Center:
+                {
+                    var value = cell?.ToString() ?? string.Empty;
+                    var spaces = wide - value.Length;
+                    var padLeft = spaces / 2;
+
+                    var align = $"{{{i}}}";
+
+                    if (spaces == 0)
+                    {
+                        return align;
+                    }
+
+                    var leftPart = new string(' ', padLeft);
+                    var rightPart = new string(' ', spaces - padLeft);
+                    return $"{leftPart}{align}{rightPart}";
+                }
+
+                default:
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        var contentIndent = new string(indentChar, ctx.ContentIndentSize);
+        var formats = ctx.Table.Columns.Select((column, i) => Align(column, i, ctx.ColumnWidths[i], row[i]));
+        var lineFormat = formats.Aggregate((l, r) => $"{l}{contentIndent}{columnDivider}{contentIndent}{r}");
+        return $"{ctx.Indent}{left}{contentIndent}{lineFormat}{contentIndent}{right}";
     }
 
     private static int GetTableWidth(ITextTable table)
@@ -134,7 +157,7 @@ internal static class TextTablePrinter
             ctx.OutputTo.WriteLine(divider);
         }
 
-        var lineFormat = $"{ctx.Indent}|{PadCenter(ctx.Table.Title, titleArea)}|";
+        var lineFormat = $"{ctx.Indent}|{ctx.Table.Title.PadCenter(titleArea)}|";
         ctx.OutputTo.WriteLine(lineFormat);
     }
 
@@ -143,29 +166,30 @@ internal static class TextTablePrinter
         if (ctx.ShouldShowTopBorder || ctx.ShouldShowTitle)
         {
             var div = BuildLineFormat(ctx, '+', '+', '+', '-');
-            var objects = ctx.ColumnLengths.Select(object (number) => new string('-', number)).ToArray();
+            var objects = ctx.ColumnWidths.Select(number => new string('-', number)).Cast<object>().ToArray();
             ctx.OutputTo.WriteLine(div, objects);
         }
 
-        var fmt = BuildLineFormat(ctx, '|', '|', '|', ' ');
-        var columnNames = ctx.Table.Columns.Select(object (column) => column.Name);
-        ctx.OutputTo.WriteLine(fmt, columnNames.ToArray());
+        var columnNames = ctx.Table.Columns.Select(column => column.Name).Cast<object>().ToArray();
+        var fmt = BuildRowLineFormat(ctx, columnNames, '|', '|', '|', ' ');
+        ctx.OutputTo.WriteLine(fmt, columnNames);
     }
 
     private static void PrintRows(PrintContext ctx)
     {
         var div = BuildLineFormat(ctx, '+', '+', '+', '-');
-        var objects = ctx.ColumnLengths.Select(object (number) => new string('-', number)).ToArray();
+        var objects = ctx.ColumnWidths.Select(object (number) => new string('-', number)).ToArray();
         var divider = string.Format(div, objects);
 
-        var fmt = BuildLineFormat(ctx, '|', '|', '|', ' ');
         if (ctx.ShouldShowTopBorder || ctx.ShouldShowTitle || ctx.ShouldShowHeader)
         {
             ctx.OutputTo.WriteLine(divider);
         }
 
+        string fmt;
         foreach (var row in ctx.Table.Rows.SkipLast(1))
         {
+            fmt = BuildRowLineFormat(ctx, row, '|', '|', '|', ' ');
             ctx.OutputTo.WriteLine(fmt, row);
 
             if (ctx.ShouldShowRowSeparator)
@@ -174,7 +198,9 @@ internal static class TextTablePrinter
             }
         }
 
-        ctx.OutputTo.WriteLine(fmt, ctx.Table.Rows.Last());
+        var r = ctx.Table.Rows.Last();
+        fmt = BuildRowLineFormat(ctx, r, '|', '|', '|', ' ');
+        ctx.OutputTo.WriteLine(fmt, r);
 
         if (ctx.ShouldShowFooter)
         {
@@ -217,8 +243,12 @@ internal static class TextTablePrinter
     private static PrintContext CreateContext(ITextTable table, TableLayout layout, TextWriter output)
     {
         var tableWidth = GetTableWidth(table);
-        var columnLengths = GetColumnWidths(table).ToList();
-        return PrintContext.Create(table, layout, output, columnLengths, tableWidth);
+        var columnWidths = GetColumnWidths(table).ToList();
+        return new PrintContext(table: table,
+                                outputTo: output,
+                                layout: layout,
+                                columnWidths: columnWidths,
+                                tableWidth: tableWidth);
     }
 
     public static void PrintTo(TextWriter output, ITextTable table, TableLayout layout)

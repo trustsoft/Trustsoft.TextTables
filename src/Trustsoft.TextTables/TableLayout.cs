@@ -18,7 +18,7 @@ public enum TableLayout
     /// <remarks>
     ///   <![CDATA[
     ///    -------------------------------------------
-    ///    | FirstName | LastName |   Birthday | Age |
+    ///    | FirstName | LastName | Birthday   | Age |
     ///    -------------------------------------------
     ///    | First 1   | Last 1   | 08.06.1987 |  37 |
     ///    -------------------------------------------
@@ -36,7 +36,7 @@ public enum TableLayout
     /// <remarks>
     ///   <![CDATA[
     ///    -------------------------------------------
-    ///    | FirstName | LastName |   Birthday | Age |
+    ///    | FirstName | LastName | Birthday   | Age |
     ///    -------------------------------------------
     ///    | First 1   | Last 1   | 08.06.1987 |  37 |
     ///    | First 2   | Last 2   | 18.09.1996 |  28 |
@@ -51,7 +51,7 @@ public enum TableLayout
     /// </summary>
     /// <remarks>
     ///   <![CDATA[
-    ///    | FirstName | LastName |   Birthday | Age |
+    ///    | FirstName | LastName | Birthday   | Age |
     ///    -------------------------------------------
     ///    | First 1   | Last 1   | 08.06.1987 |  37 |
     ///    | First 2   | Last 2   | 18.09.1996 |  28 |
@@ -63,18 +63,5 @@ public enum TableLayout
     /// <summary>
     ///   Default table layout.
     /// </summary>
-    /// <remarks>
-    ///   <![CDATA[
-    ///    -------------------------------------------
-    ///    | FirstName | LastName |   Birthday | Age |
-    ///    -------------------------------------------
-    ///    | First 1   | Last 1   | 08.06.1987 |  37 |
-    ///    -------------------------------------------
-    ///    | First 2   | Last 2   | 18.09.1996 |  28 |
-    ///    -------------------------------------------
-    ///    | First 3   | Last 3   | 21.04.2004 |  20 |
-    ///    -------------------------------------------
-    /// ]]>
-    /// </remarks>
     Default = Standard,
 }

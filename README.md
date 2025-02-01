@@ -22,7 +22,7 @@ Work with text tables with ease.
 - Table footer;
 - Table ruler;
 - Column content indentation;
-- Column content alignment (left, right).
+- Column content alignment (left, right, center).
 
 ### Usage:
 ```csharp

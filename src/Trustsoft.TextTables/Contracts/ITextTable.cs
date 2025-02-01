@@ -13,38 +13,31 @@ namespace Trustsoft.TextTables.Contracts;
 public interface ITextTable
 {
     /// <summary>
-    ///   The title of the table.
+    ///   Gets or sets the title of the table.
     /// </summary>
     string Title { get; set; }
 
     /// <summary>
-    ///   The columns of the table.
+    ///   Gets the collection of columns contained in this table.
     /// </summary>
-    List<TableColumn> Columns { get; }
+    IList<TableColumn> Columns { get; }
 
     /// <summary>
-    ///   The collection of rows that belong to this table.
+    ///   Gets the collection of rows that belong to this table.
     /// </summary>
     /// <value> The rows data. </value>
     IList<object?[]> Rows { get; }
     
     /// <summary>
-    ///   The collection of footer data that belong to this table.
+    ///   Gets the collection of footer data that belong to this table.
     /// </summary>
     /// <value> The footer data. </value>
     IList<object?> Footer { get; }
 
     /// <summary>
-    ///   Defines table configuration options.
+    ///   Gets or sets the configuration options of this table.
     /// </summary>
     TableOptions Options { get; set; }
-
-    /// <summary>
-    ///   Writes table data to output defined by <see cref="P:OutputTo" />
-    ///   and in specified output <paramref name="layout"/>.
-    /// </summary>
-    /// <param name="layout"> The output layout. </param>
-    void Write(TableLayout layout = TableLayout.Default);
 
     /// <summary>
     ///   Writes table data to specified <paramref name="output" />

@@ -16,14 +16,14 @@ using Trustsoft.TextTables.Contracts;
 public class TextTable : ITextTable
 {
     /// <summary>
-    ///   Gets or sets the title of the table.
+    ///   Gets or sets the title of this table.
     /// </summary>
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; set; }
 
     /// <summary>
-    ///   Defines the columns of the table.
+    ///   Gets the collection of columns contained in this table.
     /// </summary>
-    public List<TableColumn> Columns { get; }
+    public IList<TableColumn> Columns { get; }
 
     /// <summary>
     ///   Gets the collection of rows that belong to this table.
@@ -36,19 +36,51 @@ public class TextTable : ITextTable
     public IList<object?> Footer { get; } = [];
 
     /// <summary>
-    ///   Defines this table configuration options.
+    ///   Gets or sets the configuration options of this table.
     /// </summary>
     public TableOptions Options { get; set; }
+
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="TextTable" /> class
+    ///   with the specified <paramref name="options"/>,
+    ///   <paramref name="columns" /> and <paramref name="title"/>.
+    /// </summary>
+    /// <param name="options"> The table configuration options. </param>
+    /// <param name="columns"> The table columns. </param>
+    /// <param name="title"> The table title. </param>
+    public TextTable(TableOptions options, IList<TableColumn> columns, string title)
+    {
+        this.Options = options;
+        this.Columns = columns;
+        this.Title = title;
+    }
+
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="TextTable" /> class
+    ///   with the specified <paramref name="columns" /> and <paramref name="title"/>.
+    /// </summary>
+    /// <param name="columns"> The table columns. </param>
+    /// <param name="title"> The table title. </param>
+    public TextTable(IList<TableColumn> columns, string title) : this(new TableOptions(), columns, title)
+    {
+    }
 
     /// <summary>
     ///   Initializes a new instance of the <see cref="TextTable" /> class
     ///   with the specified <paramref name="columns" />.
     /// </summary>
     /// <param name="columns"> The table columns. </param>
-    public TextTable(List<TableColumn> columns)
+    public TextTable(IList<TableColumn> columns) : this(columns, string.Empty)
     {
-        this.Options = new TableOptions();
-        this.Columns = columns;
+    }
+
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="TextTable" /> class
+    ///   with the specified <paramref name="columns" />.
+    /// </summary>
+    /// <param name="columns"> The table columns. </param>
+    public TextTable(IEnumerable<TableColumn> columns) : this(columns.ToList())
+    {
     }
 
     /// <summary>
@@ -56,21 +88,36 @@ public class TextTable : ITextTable
     ///   with columns of specified <paramref name="columnNames">column names</paramref>.
     /// </summary>
     /// <param name="columnNames"> The column names. </param>
-    public TextTable(List<string> columnNames)
-            : this(columnNames.Select(name => new TableColumn(name)).ToList())
+    public TextTable(IList<string> columnNames) : this(columnNames.Select(name => new TableColumn(name)))
     {
-        this.Options = new TableOptions();
     }
 
     /// <summary>
     ///   Initializes a new instance of the <see cref="TextTable" /> class
-    ///   with the specified tuples of column name and content alignment.
+    ///   with columns of specified <paramref name="columnNames">column names</paramref>.
+    /// </summary>
+    /// <param name="columnNames"> The column names. </param>
+    public TextTable(IEnumerable<string> columnNames) : this(columnNames.ToList())
+    {
+    }
+
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="TextTable" /> class
+    ///   with columns of specified <paramref name="columnNames">column names</paramref>.
+    /// </summary>
+    /// <param name="columnNames"> The column names. </param>
+    public TextTable(params string[] columnNames) : this(columnNames.ToList())
+    {
+    }
+
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="TextTable" /> class
+    ///   with the specified <paramref name="tuples"/> of column name and content alignment.
     /// </summary>
     /// <param name="tuples"> The pairs of column name and content alignment. </param>
-    public TextTable(List<(string name, Alignment alignment)> tuples)
-            : this(tuples.Select(tuple => new TableColumn(tuple.name, tuple.alignment)).ToList())
+    public TextTable(IList<(string name, Alignment alignment)> tuples)
+            : this(tuples.Select(tuple => new TableColumn(tuple.name, tuple.alignment)))
     {
-        this.Options = new TableOptions();
     }
 
     /// <summary>
@@ -113,15 +160,6 @@ public class TextTable : ITextTable
     }
 
     /// <summary>
-    ///   Writes this table data to output defined by <see cref="P:OutputTo" />.
-    /// </summary>
-    /// <param name="layout"> The output layout. </param>
-    public void Write(TableLayout layout = TableLayout.Default)
-    {
-        this.WriteTo(this.Options.OutputTo, layout);
-    }
-
-    /// <summary>
     ///   Writes this table data to specified <paramref name="output" />.
     /// </summary>
     /// <param name="output"> The output to print out table data. </param>
@@ -129,5 +167,32 @@ public class TextTable : ITextTable
     public void WriteTo(TextWriter output, TableLayout layout = TableLayout.Default)
     {
         TextTablePrinter.PrintTo(output, this, layout);
+    }
+
+    /// <summary>
+    ///   Returns a <see cref="System.String" /> that represents this table
+    ///   using <see cref="TableLayout.Default"/> output layout.
+    /// </summary>
+    /// <returns> A <see cref="System.String" /> that represents this table. </returns>
+    public override string ToString()
+    {
+        using var writer = new StringWriter();
+        this.WriteTo(writer);
+
+        return writer.ToString();
+    }
+
+    /// <summary>
+    ///   Returns a <see cref="System.String" /> that represents this table
+    ///   using <paramref name="layout"/> output layout.
+    /// </summary>
+    /// <param name="layout"> The output layout. </param>
+    /// <returns> A <see cref="System.String" /> that represents this table. </returns>
+    public string ToString(TableLayout layout)
+    {
+        using var writer = new StringWriter();
+        this.WriteTo(writer, layout);
+
+        return writer.ToString();
     }
 }
