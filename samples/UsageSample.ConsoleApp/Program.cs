@@ -153,6 +153,7 @@ internal static class Program
         var count = 0;
         foreach (TableLayout layout in layouts)
         {
+            Console.WriteLine();
             Console.WriteLine(GetMessage(table, $"{id}.{++count}", layout));
             Console.WriteLine();
             table.ToConsole(layout);
