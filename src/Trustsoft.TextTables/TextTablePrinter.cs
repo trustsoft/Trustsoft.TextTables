@@ -38,16 +38,18 @@ internal static class TextTablePrinter
             switch (column.Alignment)
             {
                 case Alignment.Left:
+                {
+                    return $"{{{i},-{wide}}}";
+                }
                 case Alignment.Right:
                 {
-                    return $"{{{i},{(column.Alignment == Alignment.Left ? "-" : "")}{wide}}}";
+                    return $"{{{i},{wide}}}";
                 }
 
                 case Alignment.Center:
                 {
                     var value = cell?.ToString() ?? string.Empty;
                     var spaces = wide - value.Length;
-                    var padLeft = spaces / 2;
 
                     var align = $"{{{i}}}";
 
@@ -55,7 +57,8 @@ internal static class TextTablePrinter
                     {
                         return align;
                     }
-
+                    
+                    var padLeft = spaces / 2;
                     var leftPart = new string(' ', padLeft);
                     var rightPart = new string(' ', spaces - padLeft);
                     return $"{leftPart}{align}{rightPart}";
@@ -114,7 +117,7 @@ internal static class TextTablePrinter
 
     private static int GetFooterWidth(ITextTable table)
     {
-        // left and right borders 
+        // left and right borders
         int width = 2;
 
         // add footer parts lengths
@@ -158,7 +161,7 @@ internal static class TextTablePrinter
         }
 
         var lineFormat = $"{ctx.Indent}|{ctx.Table.Title.PadCenter(titleArea)}|";
-        ctx.OutputTo.WriteLine(lineFormat);
+        ctx.OutputTo.Write(lineFormat);
     }
 
     private static void PrintHeader(PrintContext ctx)
@@ -167,12 +170,17 @@ internal static class TextTablePrinter
         {
             var div = BuildLineFormat(ctx, '+', '+', '+', '-');
             var objects = ctx.ColumnWidths.Select(number => new string('-', number)).Cast<object>().ToArray();
+            if (ctx.ShouldShowTitle)
+            {
+                ctx.OutputTo.WriteLine();
+            }
+
             ctx.OutputTo.WriteLine(div, objects);
         }
 
         var columnNames = ctx.Table.Columns.Select(column => column.Name).Cast<object>().ToArray();
         var fmt = BuildRowLineFormat(ctx, columnNames, '|', '|', '|', ' ');
-        ctx.OutputTo.WriteLine(fmt, columnNames);
+        ctx.OutputTo.Write(fmt, columnNames);
     }
 
     private static void PrintRows(PrintContext ctx)
@@ -183,35 +191,33 @@ internal static class TextTablePrinter
 
         if (ctx.ShouldShowTopBorder || ctx.ShouldShowTitle || ctx.ShouldShowHeader)
         {
-            ctx.OutputTo.WriteLine(divider);
+            ctx.OutputTo.WriteLine();
+            ctx.OutputTo.Write(divider);
         }
 
         string fmt;
         foreach (var row in ctx.Table.Rows.SkipLast(1))
         {
             fmt = BuildRowLineFormat(ctx, row, '|', '|', '|', ' ');
-            ctx.OutputTo.WriteLine(fmt, row);
+            ctx.OutputTo.WriteLine();
+            ctx.OutputTo.Write(fmt, row);
 
             if (ctx.ShouldShowRowSeparator)
             {
-                ctx.OutputTo.WriteLine(divider);
+                ctx.OutputTo.WriteLine();
+                ctx.OutputTo.Write(divider);
             }
         }
 
         var r = ctx.Table.Rows.Last();
         fmt = BuildRowLineFormat(ctx, r, '|', '|', '|', ' ');
-        ctx.OutputTo.WriteLine(fmt, r);
+        ctx.OutputTo.WriteLine();
+        ctx.OutputTo.Write(fmt, r);
 
-        if (ctx.ShouldShowFooter)
+        if (ctx.ShouldShowFooter || ctx.ShouldShowBottomBorder)
         {
-            ctx.OutputTo.WriteLine(divider);
-        }
-        else
-        {
-            if (ctx.ShouldShowBottomBorder)
-            {
-                ctx.OutputTo.WriteLine(divider);
-            }
+            ctx.OutputTo.WriteLine();
+            ctx.OutputTo.Write(divider);
         }
     }
 
@@ -225,18 +231,20 @@ internal static class TextTablePrinter
         var footerFirstPartDesiredWidth = ctx.TableWidth - footerDesiredWidth;
         footerWidths[0] = footerFirstPartDesiredWidth;
         var lineFormat = ctx.Indent;
-        var indices = Enumerable.Range(0, footerParts.Count);
-        lineFormat += indices
-                      .Select(i => "|" + ctx.ContentIndent + "{" + i + "," + (i == 0 ? "-" : "") + footerWidths[i] + "}")
-                      .Aggregate((a, b) => $"{a}{ctx.ContentIndent}{b}") + ctx.ContentIndent + "|";
+        var indices = Enumerable.Range(0, footerParts.Count).ToList();
+        var aligns = indices.Select(i => i == 0 ? "-" : "").ToArray();
+        lineFormat += indices.Select(i => $"|{ctx.ContentIndent}{{{i},{aligns[i]}{footerWidths[i]}}}")
+                             .Aggregate((a, b) => $"{a}{ctx.ContentIndent}{b}") + ctx.ContentIndent + "|";
 
         var footerArea = ctx.TableWidth - 2;
-        ctx.OutputTo.WriteLine(lineFormat, ctx.Table.Footer.ToArray());
+        ctx.OutputTo.WriteLine();
+        ctx.OutputTo.Write(lineFormat, ctx.Table.Footer.ToArray());
 
         if (ctx.ShouldShowBottomBorder)
         {
             var divider = CreateDivider(ctx, footerArea);
-            ctx.OutputTo.WriteLine(divider);
+            ctx.OutputTo.WriteLine();
+            ctx.OutputTo.Write(divider);
         }
     }
 
