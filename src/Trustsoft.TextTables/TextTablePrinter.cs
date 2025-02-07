@@ -81,9 +81,11 @@ internal static class TextTablePrinter
     {
         // add borders
         int width = 2;
-        
+
+        var columnLengths = GetColumnWidths(table);
+
         // add column lengths
-        width += GetColumnWidths(table).Sum();
+        width += columnLengths.Sum();
         
         // add columns content indent left + right
         width += table.Columns.Count * table.Options.ContentIndent * 2;
@@ -101,11 +103,26 @@ internal static class TextTablePrinter
             var result = table.Rows
                               .Select(row => row[index])
                               .Select(rowValue => rowValue?.ToString() ?? string.Empty)
-                              .Union([table.Columns[index].Name])
                               .Select(s => s.Length).Max();
 
-            yield return result;
+            if (table.Options.ShowHeader)
+            {
+                yield return Math.Max(result, table.Columns[index].Name.Length);
+            }
+            else
+            {
+                yield return result;
+            }
         }
+    }
+
+    private static IEnumerable<int> GetHeaderWidths(ITextTable table)
+    {
+        var result = table.Columns
+                          .Select(column => column.Name)
+                          .Select(name => name?.Length ?? 0);
+
+        return result;
     }
 
     private static IEnumerable<int> GetFooterPartsWidths(ITextTable table)
@@ -251,11 +268,12 @@ internal static class TextTablePrinter
     private static PrintContext CreateContext(ITextTable table, TableLayout layout, TextWriter output)
     {
         var tableWidth = GetTableWidth(table);
-        var columnWidths = GetColumnWidths(table).ToList();
+        var columnWidths = GetColumnWidths(table);
+
         return new PrintContext(table: table,
                                 outputTo: output,
                                 layout: layout,
-                                columnWidths: columnWidths,
+                                columnWidths: columnWidths.ToList(),
                                 tableWidth: tableWidth);
     }
 

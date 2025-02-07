@@ -176,15 +176,12 @@ public class TextTable : ITextTable
     /// <returns> A <see cref="System.String" /> that represents this table. </returns>
     public override string ToString()
     {
-        using var writer = new StringWriter();
-        this.WriteTo(writer);
-
-        return writer.ToString();
+        return this.ToString(TableLayout.Default);
     }
 
     /// <summary>
     ///   Returns a <see cref="System.String" /> that represents this table
-    ///   using <paramref name="layout"/> output layout.
+    ///   using specified output <paramref name="layout"/>.
     /// </summary>
     /// <param name="layout"> The output layout. </param>
     /// <returns> A <see cref="System.String" /> that represents this table. </returns>
