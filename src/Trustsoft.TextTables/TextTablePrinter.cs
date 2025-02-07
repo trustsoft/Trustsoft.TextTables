@@ -81,9 +81,11 @@ internal static class TextTablePrinter
     {
         // add borders
         int width = 2;
-        
+
+        var columnLengths = GetColumnWidths(table);
+
         // add column lengths
-        width += GetColumnWidths(table).Sum();
+        width += columnLengths.Sum();
         
         // add columns content indent left + right
         width += table.Columns.Count * table.Options.ContentIndent * 2;
@@ -96,16 +98,32 @@ internal static class TextTablePrinter
 
     private static IEnumerable<int> GetColumnWidths(ITextTable table)
     {
+        var columnLengths = GetContentWidths(table);
+
+        if (table.Options.ShowHeader)
+        {
+            return columnLengths.Zip(GetHeaderWidths(table), Math.Max);
+        }
+
+        return columnLengths;
+    }
+
+    private static IEnumerable<int> GetContentWidths(ITextTable table)
+    {
         for (var index = 0; index < table.Columns.Count; index++)
         {
-            var result = table.Rows
+            yield return table.Rows
                               .Select(row => row[index])
                               .Select(rowValue => rowValue?.ToString() ?? string.Empty)
-                              .Union([table.Columns[index].Name])
                               .Select(s => s.Length).Max();
-
-            yield return result;
         }
+    }
+
+    private static IEnumerable<int> GetHeaderWidths(ITextTable table)
+    {
+        return table.Columns
+                    .Select(column => column.Name)
+                    .Select(name => name.Length);
     }
 
     private static IEnumerable<int> GetFooterPartsWidths(ITextTable table)
@@ -251,11 +269,12 @@ internal static class TextTablePrinter
     private static PrintContext CreateContext(ITextTable table, TableLayout layout, TextWriter output)
     {
         var tableWidth = GetTableWidth(table);
-        var columnWidths = GetColumnWidths(table).ToList();
+        var columnWidths = GetColumnWidths(table);
+
         return new PrintContext(table: table,
                                 outputTo: output,
                                 layout: layout,
-                                columnWidths: columnWidths,
+                                columnWidths: columnWidths.ToList(),
                                 tableWidth: tableWidth);
     }
 
