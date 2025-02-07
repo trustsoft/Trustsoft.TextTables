@@ -16,22 +16,22 @@ public sealed partial class TextTableTests
     [TestCategory("Title, Header, Footer")]
     public void TestTableTitleHeaderFooterStandardLayout()
     {
-        TextTable table = CreateTitleHeaderFooterTable();
+        TextTable table = CreateTitleHeaderFooterTable(indent: 2, contentIndent: 1);
         var actual = table.ToString(TableLayout.Standard);
         Assert.AreEqual("""
-                        +--------------------------------------+
-                        |              Data List               |
-                        +-------+--------+--------+------------+
-                        | Name  | Value1 | Value2 | Value3     |
-                        +-------+--------+--------+------------+
-                        | Name1 | 1      | 2      | 23.06.1988 |
-                        +-------+--------+--------+------------+
-                        | Name2 | 2      | 3      | 10.09.1985 |
-                        +-------+--------+--------+------------+
-                        | Name3 | 3      | 4      | 16.05.1991 |
-                        +-------+--------+--------+------------+
-                        | Test footer content part 1  | part 2 |
-                        +--------------------------------------+
+                          +--------------------------------------+
+                          |              Data List               |
+                          +-------+--------+--------+------------+
+                          | Name  | Value1 | Value2 | Value3     |
+                          +-------+--------+--------+------------+
+                          | Name1 | 10     | 2      | 23.06.1988 |
+                          +-------+--------+--------+------------+
+                          | Name2 | 20     | 3      | 10.09.1985 |
+                          +-------+--------+--------+------------+
+                          | Name3 | 30     | 4      | 16.05.1991 |
+                          +-------+--------+--------+------------+
+                          | Footer part 1               | part 2 |
+                          +--------------------------------------+
                         """,
                         actual);
     }
@@ -40,20 +40,20 @@ public sealed partial class TextTableTests
     [TestCategory("Title, Header, Footer")]
     public void TestTableTitleHeaderFooterCompactLayout()
     {
-        TextTable table = CreateTitleHeaderFooterTable();
+        TextTable table = CreateTitleHeaderFooterTable(indent: 2, contentIndent: 2);
         var actual = table.ToString(TableLayout.Compact);
         Assert.AreEqual("""
-                        +--------------------------------------+
-                        |              Data List               |
-                        +-------+--------+--------+------------+
-                        | Name  | Value1 | Value2 | Value3     |
-                        +-------+--------+--------+------------+
-                        | Name1 | 1      | 2      | 23.06.1988 |
-                        | Name2 | 2      | 3      | 10.09.1985 |
-                        | Name3 | 3      | 4      | 16.05.1991 |
-                        +-------+--------+--------+------------+
-                        | Test footer content part 1  | part 2 |
-                        +--------------------------------------+
+                          +----------------------------------------------+
+                          |                  Data List                   |
+                          +---------+----------+----------+--------------+
+                          |  Name   |  Value1  |  Value2  |  Value3      |
+                          +---------+----------+----------+--------------+
+                          |  Name1  |  10      |  2       |  23.06.1988  |
+                          |  Name2  |  20      |  3       |  10.09.1985  |
+                          |  Name3  |  30      |  4       |  16.05.1991  |
+                          +---------+----------+----------+--------------+
+                          |  Footer part 1                    |  part 2  |
+                          +----------------------------------------------+
                         """,
                         actual);
     }
@@ -62,18 +62,18 @@ public sealed partial class TextTableTests
     [TestCategory("Title, Header, Footer")]
     public void TestTableTitleHeaderFooterMinimalLayout()
     {
-        TextTable table = CreateTitleHeaderFooterTable();
+        TextTable table = CreateTitleHeaderFooterTable(indent: 0, contentIndent: 1);
         var actual = table.ToString(TableLayout.Minimal);
         Assert.AreEqual("""
                         |              Data List               |
                         +-------+--------+--------+------------+
                         | Name  | Value1 | Value2 | Value3     |
                         +-------+--------+--------+------------+
-                        | Name1 | 1      | 2      | 23.06.1988 |
-                        | Name2 | 2      | 3      | 10.09.1985 |
-                        | Name3 | 3      | 4      | 16.05.1991 |
+                        | Name1 | 10     | 2      | 23.06.1988 |
+                        | Name2 | 20     | 3      | 10.09.1985 |
+                        | Name3 | 30     | 4      | 16.05.1991 |
                         +-------+--------+--------+------------+
-                        | Test footer content part 1  | part 2 |
+                        | Footer part 1               | part 2 |
                         """,
                         actual);
     }
@@ -86,22 +86,22 @@ public sealed partial class TextTableTests
     [TestCategory("Ruler, Title, Header")]
     public void TestTableTitleHeaderStandardLayout()
     {
-        TextTable table = CreateRulerTitleHeaderTable();
+        TextTable table = CreateRulerTitleHeaderTable(indent: 1, contentIndent: 1);
         var actual = table.ToString(TableLayout.Standard);
         Assert.AreEqual("""
-                                 1         2         3         4
-                        1234567890123456789012345678901234567890
-                        +--------------------------------------+
-                        |              Data List               |
-                        +-------+--------+--------+------------+
-                        | Name  | Value1 | Value2 | Value3     |
-                        +-------+--------+--------+------------+
-                        | Name1 | 1      | 2      | 23.06.1988 |
-                        +-------+--------+--------+------------+
-                        | Name2 | 2      | 3      | 10.09.1985 |
-                        +-------+--------+--------+------------+
-                        | Name3 | 3      | 4      | 16.05.1991 |
-                        +-------+--------+--------+------------+
+                                  1         2         3         4
+                         1234567890123456789012345678901234567890
+                         +--------------------------------------+
+                         |              Data List               |
+                         +-------+--------+--------+------------+
+                         | Name  | Value1 | Value2 | Value3     |
+                         +-------+--------+--------+------------+
+                         | Name1 | 10     | 2      | 23.06.1988 |
+                         +-------+--------+--------+------------+
+                         | Name2 | 20     | 3      | 10.09.1985 |
+                         +-------+--------+--------+------------+
+                         | Name3 | 30     | 4      | 16.05.1991 |
+                         +-------+--------+--------+------------+
                         """,
                         actual);
     }
@@ -110,7 +110,7 @@ public sealed partial class TextTableTests
     [TestCategory("Ruler, Title, Header")]
     public void TestTableTitleHeaderCompactLayout()
     {
-        TextTable table = CreateRulerTitleHeaderTable();
+        TextTable table = CreateRulerTitleHeaderTable(indent: 0, contentIndent: 1);
         var actual = table.ToString(TableLayout.Compact);
         Assert.AreEqual("""
                                  1         2         3         4
@@ -120,9 +120,9 @@ public sealed partial class TextTableTests
                         +-------+--------+--------+------------+
                         | Name  | Value1 | Value2 | Value3     |
                         +-------+--------+--------+------------+
-                        | Name1 | 1      | 2      | 23.06.1988 |
-                        | Name2 | 2      | 3      | 10.09.1985 |
-                        | Name3 | 3      | 4      | 16.05.1991 |
+                        | Name1 | 10     | 2      | 23.06.1988 |
+                        | Name2 | 20     | 3      | 10.09.1985 |
+                        | Name3 | 30     | 4      | 16.05.1991 |
                         +-------+--------+--------+------------+
                         """,
                         actual);
@@ -132,7 +132,7 @@ public sealed partial class TextTableTests
     [TestCategory("Ruler, Title, Header")]
     public void TestTableTitleHeaderMinimalLayout()
     {
-        TextTable table = CreateRulerTitleHeaderTable();
+        TextTable table = CreateRulerTitleHeaderTable(indent: 0, contentIndent: 1);
         var actual = table.ToString(TableLayout.Minimal);
         Assert.AreEqual("""
                                  1         2         3         4
@@ -141,9 +141,9 @@ public sealed partial class TextTableTests
                         +-------+--------+--------+------------+
                         | Name  | Value1 | Value2 | Value3     |
                         +-------+--------+--------+------------+
-                        | Name1 | 1      | 2      | 23.06.1988 |
-                        | Name2 | 2      | 3      | 10.09.1985 |
-                        | Name3 | 3      | 4      | 16.05.1991 |
+                        | Name1 | 10     | 2      | 23.06.1988 |
+                        | Name2 | 20     | 3      | 10.09.1985 |
+                        | Name3 | 30     | 4      | 16.05.1991 |
                         """,
                         actual);
     }
@@ -156,20 +156,20 @@ public sealed partial class TextTableTests
     [TestCategory("Title, Footer")]
     public void TestTableTitleFooterStandardLayout()
     {
-        TextTable table = CreateTitleFooterTable();
+        TextTable table = CreateTitleFooterTable(indent: 0, contentIndent: 1);
         var actual = table.ToString(TableLayout.Standard);
         Assert.AreEqual("""
-                        +--------------------------------------+
-                        |              Data List               |
-                        +-------+--------+--------+------------+
-                        | Name1 | 1      | 2      | 23.06.1988 |
-                        +-------+--------+--------+------------+
-                        | Name2 | 2      | 3      | 10.09.1985 |
-                        +-------+--------+--------+------------+
-                        | Name3 | 3      | 4      | 16.05.1991 |
-                        +-------+--------+--------+------------+
-                        | Test footer content part 1  | part 2 |
-                        +--------------------------------------+
+                        +-----------------------------+
+                        |          Data List          |
+                        +-------+----+---+------------+
+                        | Name1 | 10 | 2 | 23.06.1988 |
+                        +-------+----+---+------------+
+                        | Name2 | 20 | 3 | 10.09.1985 |
+                        +-------+----+---+------------+
+                        | Name3 | 30 | 4 | 16.05.1991 |
+                        +-------+----+---+------------+
+                        | Footer part 1      | part 2 |
+                        +-----------------------------+
                         """,
                         actual);
     }
@@ -178,18 +178,18 @@ public sealed partial class TextTableTests
     [TestCategory("Title, Footer")]
     public void TestTableTitleFooterCompactLayout()
     {
-        TextTable table = CreateTitleFooterTable();
+        TextTable table = CreateTitleFooterTable(indent: 0, contentIndent: 1);
         var actual = table.ToString(TableLayout.Compact);
         Assert.AreEqual("""
-                        +--------------------------------------+
-                        |              Data List               |
-                        +-------+--------+--------+------------+
-                        | Name1 | 1      | 2      | 23.06.1988 |
-                        | Name2 | 2      | 3      | 10.09.1985 |
-                        | Name3 | 3      | 4      | 16.05.1991 |
-                        +-------+--------+--------+------------+
-                        | Test footer content part 1  | part 2 |
-                        +--------------------------------------+
+                        +-----------------------------+
+                        |          Data List          |
+                        +-------+----+---+------------+
+                        | Name1 | 10 | 2 | 23.06.1988 |
+                        | Name2 | 20 | 3 | 10.09.1985 |
+                        | Name3 | 30 | 4 | 16.05.1991 |
+                        +-------+----+---+------------+
+                        | Footer part 1      | part 2 |
+                        +-----------------------------+
                         """,
                         actual);
     }
@@ -198,16 +198,16 @@ public sealed partial class TextTableTests
     [TestCategory("Title, Footer")]
     public void TestTableTitleFooterMinimalLayout()
     {
-        TextTable table = CreateTitleFooterTable();
+        TextTable table = CreateTitleFooterTable(indent: 0, contentIndent: 2);
         var actual = table.ToString(TableLayout.Minimal);
         Assert.AreEqual("""
-                        |              Data List               |
-                        +-------+--------+--------+------------+
-                        | Name1 | 1      | 2      | 23.06.1988 |
-                        | Name2 | 2      | 3      | 10.09.1985 |
-                        | Name3 | 3      | 4      | 16.05.1991 |
-                        +-------+--------+--------+------------+
-                        | Test footer content part 1  | part 2 |
+                        |              Data List              |
+                        +---------+------+-----+--------------+
+                        |  Name1  |  10  |  2  |  23.06.1988  |
+                        |  Name2  |  20  |  3  |  10.09.1985  |
+                        |  Name3  |  30  |  4  |  16.05.1991  |
+                        +---------+------+-----+--------------+
+                        |  Footer part 1           |  part 2  |
                         """,
                         actual);
     }
@@ -220,19 +220,19 @@ public sealed partial class TextTableTests
     [TestCategory("Header, Footer")]
     public void TestTableHeaderFooterStandardLayout()
     {
-        TextTable table = CreateHeaderFooterTable();
+        TextTable table = CreateHeaderFooterTable(indent: 0, contentIndent: 1);
         var actual = table.ToString(TableLayout.Standard);
         Assert.AreEqual("""
                         +-------+--------+--------+------------+
-                        | Name  | Value1 | Value2 | Value3     |
+                        | Name  | Value1 | Value2 |     Value3 |
                         +-------+--------+--------+------------+
-                        | Name1 | 1      | 2      | 23.06.1988 |
+                        | Name1 |   10   |      2 | 23.06.1988 |
                         +-------+--------+--------+------------+
-                        | Name2 | 2      | 3      | 10.09.1985 |
+                        | Name2 |   20   |      3 | 10.09.1985 |
                         +-------+--------+--------+------------+
-                        | Name3 | 3      | 4      | 16.05.1991 |
+                        | Name3 |   30   |      4 | 16.05.1991 |
                         +-------+--------+--------+------------+
-                        | Test footer content part 1  | part 2 |
+                        | Footer part 1                        |
                         +--------------------------------------+
                         """,
                         actual);
@@ -242,17 +242,17 @@ public sealed partial class TextTableTests
     [TestCategory("Header, Footer")]
     public void TestTableHeaderFooterCompactLayout()
     {
-        TextTable table = CreateHeaderFooterTable();
+        TextTable table = CreateHeaderFooterTable(indent: 0, contentIndent: 1);
         var actual = table.ToString(TableLayout.Compact);
         Assert.AreEqual("""
                         +-------+--------+--------+------------+
-                        | Name  | Value1 | Value2 | Value3     |
+                        | Name  | Value1 | Value2 |     Value3 |
                         +-------+--------+--------+------------+
-                        | Name1 | 1      | 2      | 23.06.1988 |
-                        | Name2 | 2      | 3      | 10.09.1985 |
-                        | Name3 | 3      | 4      | 16.05.1991 |
+                        | Name1 |   10   |      2 | 23.06.1988 |
+                        | Name2 |   20   |      3 | 10.09.1985 |
+                        | Name3 |   30   |      4 | 16.05.1991 |
                         +-------+--------+--------+------------+
-                        | Test footer content part 1  | part 2 |
+                        | Footer part 1                        |
                         +--------------------------------------+
                         """,
                         actual);
@@ -262,16 +262,16 @@ public sealed partial class TextTableTests
     [TestCategory("Header, Footer")]
     public void TestTableHeaderFooterMinimalLayout()
     {
-        TextTable table = CreateHeaderFooterTable();
+        TextTable table = CreateHeaderFooterTable(indent: 0, contentIndent: 1);
         var actual = table.ToString(TableLayout.Minimal);
         Assert.AreEqual("""
-                        | Name  | Value1 | Value2 | Value3     |
+                        | Name  | Value1 | Value2 |     Value3 |
                         +-------+--------+--------+------------+
-                        | Name1 | 1      | 2      | 23.06.1988 |
-                        | Name2 | 2      | 3      | 10.09.1985 |
-                        | Name3 | 3      | 4      | 16.05.1991 |
+                        | Name1 |   10   |      2 | 23.06.1988 |
+                        | Name2 |   20   |      3 | 10.09.1985 |
+                        | Name3 |   30   |      4 | 16.05.1991 |
                         +-------+--------+--------+------------+
-                        | Test footer content part 1  | part 2 |
+                        | Footer part 1                        |
                         """,
                         actual);
     }

@@ -23,20 +23,31 @@ public sealed partial class TextTableTests
         ];
     }
 
+    private static List<(string, Alignment)> CreateColumns()
+    {
+        return
+        [
+            ("Name", Alignment.Left),
+            ("Value1", Alignment.Center),
+            ("Value2", Alignment.Right),
+            ("Value3", Alignment.Right),
+        ];
+    }
+
     private static List<TestData> CreateTestData()
     {
         var users = new List<TestData>
         {
             new TestData("Name1",
-                         1,
+                         10,
                          "2",
                          DateOnly.Parse("23.06.1988")),
             new TestData("Name2",
-                         2,
+                         20,
                          "3",
                          DateOnly.Parse("10.09.1985")),
             new TestData("Name3",
-                         3,
+                         30,
                          "4",
                          DateOnly.Parse("16.05.1991"))
         };
@@ -53,27 +64,45 @@ public sealed partial class TextTableTests
             table.AddRow(item.Name, item.Value1, item.Value2, item.Value3);
         }
 
-        table.AddFooter("Test footer content part 1", "part 2");
+        table.AddFooter("Footer part 1", "part 2");
         table.Title = "Data List";
         return table;
     }
 
-    private static TextTable CreateTitleHeaderFooterTable()
+    private static TextTable CreateTable(List<(string, Alignment)> columns, List<TestData> data)
+    {
+        var table = new TextTable(columns);
+
+        foreach (var item in data)
+        {
+            table.AddRow(item.Name, item.Value1, item.Value2, item.Value3);
+        }
+
+        table.AddFooter("Footer part 1");
+        table.Title = "Data List";
+        return table;
+    }
+
+    private static TextTable CreateTitleHeaderFooterTable(int indent = 0, int contentIndent = 1)
     {
         var columns = CreateStringColumns();
         var data = CreateTestData();
         var table = CreateTable(columns, data);
+        table.Options.Indent = indent;
+        table.Options.ContentIndent = contentIndent;
         table.Options.ShowTitle = true;
         table.Options.ShowHeader = true;
         table.Options.ShowFooter = true;
         return table;
     }
 
-    private static TextTable CreateRulerTitleHeaderTable()
+    private static TextTable CreateRulerTitleHeaderTable(int indent = 0, int contentIndent = 1)
     {
         var columns = CreateStringColumns();
         List<TestData> data = CreateTestData();
         var table = CreateTable(columns, data);
+        table.Options.Indent = indent;
+        table.Options.ContentIndent = contentIndent;
         table.Options.ShowRuler = true;
         table.Options.ShowTitle = true;
         table.Options.ShowHeader = true;
@@ -81,22 +110,26 @@ public sealed partial class TextTableTests
         return table;
     }
 
-    private static TextTable CreateTitleFooterTable()
+    private static TextTable CreateTitleFooterTable(int indent = 0, int contentIndent = 1)
     {
         var columns = CreateStringColumns();
         List<TestData> data = CreateTestData();
         var table = CreateTable(columns, data);
+        table.Options.Indent = indent;
+        table.Options.ContentIndent = contentIndent;
         table.Options.ShowTitle = true;
         table.Options.ShowHeader = false;
         table.Options.ShowFooter = true;
         return table;
     }
 
-    private static TextTable CreateHeaderFooterTable()
+    private static TextTable CreateHeaderFooterTable(int indent = 0, int contentIndent = 1)
     {
-        var columns = CreateStringColumns();
+        var columns = CreateColumns();
         List<TestData> data = CreateTestData();
         var table = CreateTable(columns, data);
+        table.Options.Indent = indent;
+        table.Options.ContentIndent = contentIndent;
         table.Options.ShowTitle = false;
         table.Options.ShowHeader = true;
         table.Options.ShowFooter = true;
