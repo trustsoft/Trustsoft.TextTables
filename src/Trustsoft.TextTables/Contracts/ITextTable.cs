@@ -40,6 +40,14 @@ public interface ITextTable
     TableOptions Options { get; set; }
 
     /// <summary>
+    ///   Returns a <see cref="System.String" /> that represents this table
+    ///   using specified output <paramref name="layout"/>.
+    /// </summary>
+    /// <param name="layout"> The output layout. </param>
+    /// <returns> A <see cref="System.String" /> that represents this table. </returns>
+    string ToString(TableLayout layout);
+
+    /// <summary>
     ///   Writes table data to specified <paramref name="output" />
     ///   and in specified output <paramref name="layout"/>.
     /// </summary>

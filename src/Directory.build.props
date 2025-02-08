@@ -17,7 +17,7 @@
         <AssemblyVersion>1.0.0</AssemblyVersion>
         <FileVersion>1.0.0.0</FileVersion>
         <VersionPrefix>1.0.0</VersionPrefix>
-        <VersionSuffix>rc3</VersionSuffix>
+        <VersionSuffix></VersionSuffix>
         <BaseOutputPath>..\..\artifacts\</BaseOutputPath>
     </PropertyGroup>
 
@@ -52,6 +52,10 @@ Supports .NET 6.0-9.0.
         <PackageReleaseNotes>
             ChangeLog
             ---------
+            1.0.0 Updated ITextTable contract.
+            1.0.0 Code refactoring and cleanup.
+            1.0.0 Updated usage sample.
+            1.0.0 Added unit tests.
             1.0.0-rc3 Added ToConsole, ToFile, ToStream methods to output table data.
             1.0.0-rc3 Added support for centered column content alignment.
             1.0.0-rc3 Added more ways to construct TextTable.

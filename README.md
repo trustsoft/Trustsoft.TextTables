@@ -14,8 +14,7 @@ Work with text tables with ease.
 [![NuGet Latest Version (Trustsoft.TextTables)](https://img.shields.io/nuget/vpre/Trustsoft.TextTables.svg?label=Latest&color=peru)](https://www.nuget.org/packages/Trustsoft.TextTables/absoluteLatest )
 ![NuGet Downloads](https://img.shields.io/nuget/dt/Trustsoft.TextTables?color=steelblue)
 
-
-#### Features:
+### Features:
 - Table output layouts;
 - Table indentation;
 - Table title;
@@ -23,6 +22,9 @@ Work with text tables with ease.
 - Table ruler;
 - Column content indentation;
 - Column content alignment (left, right, center).
+
+### Getting Started
+Install the [NuGet package](http://www.nuget.org/packages/Trustsoft.TextTables).
 
 ### Usage:
 ```csharp
