@@ -98,31 +98,32 @@ internal static class TextTablePrinter
 
     private static IEnumerable<int> GetColumnWidths(ITextTable table)
     {
+        var columnLengths = GetContentWidths(table);
+
+        if (table.Options.ShowHeader)
+        {
+            return columnLengths.Zip(GetHeaderWidths(table), Math.Max);
+        }
+
+        return columnLengths;
+    }
+
+    private static IEnumerable<int> GetContentWidths(ITextTable table)
+    {
         for (var index = 0; index < table.Columns.Count; index++)
         {
-            var result = table.Rows
+            yield return table.Rows
                               .Select(row => row[index])
                               .Select(rowValue => rowValue?.ToString() ?? string.Empty)
                               .Select(s => s.Length).Max();
-
-            if (table.Options.ShowHeader)
-            {
-                yield return Math.Max(result, table.Columns[index].Name.Length);
-            }
-            else
-            {
-                yield return result;
-            }
         }
     }
 
     private static IEnumerable<int> GetHeaderWidths(ITextTable table)
     {
-        var result = table.Columns
-                          .Select(column => column.Name)
-                          .Select(name => name?.Length ?? 0);
-
-        return result;
+        return table.Columns
+                    .Select(column => column.Name)
+                    .Select(name => name.Length);
     }
 
     private static IEnumerable<int> GetFooterPartsWidths(ITextTable table)
